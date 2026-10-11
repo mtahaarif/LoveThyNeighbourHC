@@ -1,9 +1,15 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import './styles/fonts.css';
-import './styles/base.css';
-import './styles/atoms.css';
-import './styles/site.css';
+import { League_Spartan, Manrope } from 'next/font/google';
+import SiteNavbar from '@/components/layout/SiteNavbar';
+import SiteFooter from '@/components/layout/SiteFooter';
+import CookieConsent from '@/components/layout/CookieConsent';
+import ScrollProgress from '@/components/layout/ScrollProgress';
+import MotionProvider from '@/components/layout/MotionProvider';
+import './globals.css';
+
+const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
+const leagueSpartan = League_Spartan({ subsets: ['latin'], variable: '--font-league-spartan', display: 'swap' });
 
 const favicon = (size: number, file: string) => ({ url: `/assets/images/${file}`, sizes: `${size}x${size}`, type: 'image/png' });
 const touch = (size: number, file: string) => ({ url: `/assets/images/${file}`, sizes: `${size}x${size}` });
@@ -11,7 +17,6 @@ const touch = (size: number, file: string) => ({ url: `/assets/images/${file}`, 
 export const metadata: Metadata = {
   metadataBase: new URL('https://lovethyneighborhhc.com'),
   authors: [{ name: 'lovethyneighborhhc.com' }],
-  generator: 'Starfield Technologies; Go Daddy Website Builder 8.0.0000',
   manifest: '/manifest.webmanifest',
   verification: { google: 'bC8nyUB4hW8_GfkHZG1eZdBNNgew6zpvcWPRk1fBLHA' },
   icons: {
@@ -41,17 +46,17 @@ export const viewport: Viewport = {
   themeColor: '#115793',
 };
 
-// Hide the cookie banner before first paint for visitors who already accepted it.
-const cookieBannerScript = `try{if(/(?:^|;\\s*)cookie_terms=accepted/.test(document.cookie))document.documentElement.classList.add('cookies-accepted')}catch(e){}`;
-
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en-PH" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: cookieBannerScript }} />
-      </head>
-      <body className="x x-fonts-league-spartan x-fonts-montserrat x-fonts-fredoka-one x-fonts-archivo-black">
-        {children}
+    <html lang="en-PH" className={`${manrope.variable} ${leagueSpartan.variable}`}>
+      <body>
+        <MotionProvider>
+          <ScrollProgress />
+          <SiteNavbar />
+          <main id="main">{children}</main>
+          <SiteFooter />
+          <CookieConsent />
+        </MotionProvider>
         <Script src="https://cdn.trustedsite.com/js/1.js?position=bottomLeft&offset=15" strategy="afterInteractive" />
       </body>
     </html>

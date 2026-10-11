@@ -1,90 +1,33 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
-import CookieBanner from '@/components/site/CookieBanner';
-import Footer from '@/components/site/Footer';
-import PageShell from '@/components/site/PageShell';
-import SiteHeader from '@/components/site/SiteHeader';
+import { Home } from 'lucide-react';
+import Button from '@/components/ui/Button';
+import Reveal from '@/components/ui/Reveal';
+import { notFoundContent } from '@/content/not-found';
+import { pageMetadata } from '@/content/metadata';
 
-export const metadata: Metadata = {
-  "title": "lovethyneighborhhc.com",
-  "openGraph": {
-    "url": "/404",
-    "siteName": "lovethyneighborhhc.com",
-    "title": "lovethyneighborhhc.com",
-    "type": "website",
-    "images": [
-      {
-        "url": "/assets/images/______-5-dcd9cfb.jpg"
-      }
-    ],
-    "locale": "en_PH"
-  },
-  "twitter": {
-    "card": "summary",
-    "title": "lovethyneighborhhc.com",
-    "images": [
-      {
-        "url": "/assets/images/______-5-dcd9cfb.jpg",
-        "alt": "lovethyneighborhhc.com"
-      }
-    ]
-  }
-};
+export const metadata: Metadata = pageMetadata['/404'];
 
 export default function NotFound() {
   return (
-    <PageShell>
-      <SiteHeader path="/404" />
-      <div id="cc911fd1-6048-4468-9d3c-0f7919b36a6e" className="widget widget-introduction widget-introduction-introduction-3">
-        <div data-ux="Widget" role="region" id="cc911fd1-6048-4468-9d3c-0f7919b36a6e" className="x-el x-el-div gblnuxzq gcyjxnld gdyvsvip giffmze9 glzkfomy gr1xwajw gwpqohlt gyebw4d9 gyylpd4a">
-          <div>
-            {" "}
-            <section data-ux="Section" className="x-el x-el-section gblnuxzq gcyjxnld gdyvsvip gf8xcobr gfnbvv2p giffmze9 glclw9ha glzkfomy gnvdvwno gr1xwajw gwpqohlt gyebw4d9 gyylpd4a">
-              <div data-ux="Container" className="x-el x-el-div g3hb4mzh g9ycfsop gblnuxzq gbwjnawg gcyjxnld gdyvsvip ge0ritk7 ghedfzzs giffmze9 glzkfomy gokvceh9 gooiuydg gr1xwajw guxlb3uo gxaeiezy gyebw4d9 gyylpd4a" {...({"align":"center"} as object)}>
-                <div data-ux="Block" className="x-el x-el-div gblnuxzq gcyjxnld gdyvsvip gi65okg9 giffmze9 gitxknpm glzkfomy gr1xwajw gu2262sl gvumf6wv gyebw4d9 gyylpd4a gz83k6ex">
-                  <div data-ux="VerticalBox" className="x-el x-el-div g9xagjsp gblnuxzq gc45r0jc gcyjxnld gdyvsvip giffmze9 gij7bgfh glzkfomy gnydlpij gr1xwajw gssyr9mu gwgm2qcv gwmknlmb gyebw4d9 gyylpd4a gzfb89wh">
-                    <div data-ux="Group" className="x-el x-el-div gblnuxzq gcyjxnld gdyvsvip giffmze9 glzkfomy gr1xwajw gyebw4d9 gyylpd4a">
-                      <h1 role="heading" data-ux="HeadingMajor" data-aid="SECTION_TITLE_RENDERED" data-promoted-from="2" data-order="0" data-typography="HeadingBeta" className="x-el x-el-h1 g0czjxye g2wo6nvk g61g1whc g6p3hfgc g77yi3en g8dsbrgp g8n4emmm ga46qdha ga4amxln gak7k8pc gfmqorxo ghg5ywar gigxinfv gknls9fh glh7booc go3qeaqy goqxuqpg gpckc3en gpr80wm5 gr1xwajw gvp6acgd gvwwp2na gw64x8ni gwldylgr gwnjesmk gxg8ykvu gxpm7wpm gxugrduw gyebw4d9 gygjgilu gzfb89wh" aria-level={1}>
-                        {"Page Not Found"}
-                      </h1>
-                      <div data-ux="HorizontalBox" className="x-el x-el-div gblnuxzq gcyjxnld gdyvsvip giffmze9 gij7bgfh glzkfomy gnkxjbas gnydlpij gpfcnvdd gr1xwajw gssyr9mu gy2fy455 gyebw4d9 gyylpd4a">
-                        <div data-ux="Text" data-aid="DESCRIPTION_TEXT" data-typography="BodyBeta" className="x-el x-rt g0czjxye g6p3hfgc g8dsbrgp gdyvsvip ge0ritk7 gefyfp8u giog2xmp gmsdlrrk gpnjfd5l gr1xwajw gvroqs6p gvwwp2na gw0qdwgc gwhqo0um gyebw4d9 gzftwjlv">
-                          <p style={{ margin: "0" }}>
-                            <span>
-                              {"We can’t seem to find the page you’re looking for."}
-                            </span>
-                          </p>
-                        </div>
-                      </div>
-                      <div data-ux="Block" className="x-el x-el-div gblnuxzq gcyjxnld gdyvsvip giffmze9 glzkfomy gr1xwajw gtwvwj5w gyebw4d9 gyylpd4a">
-                        <Link data-ux-btn="secondary" data-ux="ButtonSecondary" data-aid="CTA_BUTTON_RENDERED" href="/" target="" data-page="287f429b-ed6e-416e-aa2a-319409973b79" color="HIGHCONTRAST" data-typography="ButtonAlpha" className="x-el x-el-a gabgnkfo gabkhud7 gc8p6bfo gd9f0nfo gdn7vmi4 gdxbmhsb gdyvsvip ge0ritk7 gficukn3 gij7bgfh giwyzjli gk6gcw7u glln3z9t gp9bmjr8 gpmzbjfg gpuvsyr4 gpzfz3md grs3kn0o grsggmfi gt7051bo gteikabs gtvghkoa gucozvlo gulfcfyf gv7tilis gvwwp2na gxfiv3e9 gy2fy455 gy4pn5qw gz1fupps gzfb89wh">
-                          {"Go To Home Page"}
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            {"  "}
-          </div>
-        </div>
+    <section className="relative isolate flex min-h-[calc(100svh-72px)] items-center justify-center overflow-hidden bg-gradient-to-b from-brand-50 to-white px-4 py-24 text-center">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute top-10 left-1/4 size-80 animate-[float_12s_ease-in-out_infinite] rounded-full bg-brand-200/60 blur-3xl" />
+        <div className="absolute right-1/4 bottom-10 size-72 animate-[float_15s_ease-in-out_infinite_reverse] rounded-full bg-accent-300/40 blur-3xl" />
       </div>
-      <Footer />
-      <div id="580074ac-e6cd-4405-8831-00bbf462f97a" className="widget widget-messaging widget-messaging-messaging-1">
-        <div data-ux="Element" id="bs-9" className="x-el x-el-div gblnuxzq gcyjxnld gdyvsvip giffmze9 glzkfomy gr1xwajw gyebw4d9 gyylpd4a">
-          <span data-ux="Element" className="x-el x-el-span gblnuxzq gcyjxnld gdyvsvip giffmze9 glzkfomy gr1xwajw gyebw4d9 gyylpd4a">
-            <div data-ux="Block" className="x-el x-el-div g9s5kbrx gblnuxzq gc5listd gcyjxnld gdvejhly gdyvsvip giffmze9 gl84owbc glzkfomy gm5rc0nd gmmx7zqh gr1xwajw gv60jas9 gyebw4d9 gyylpd4a">
-              <div>
-                <div />
-              </div>
-            </div>
-          </span>
-        </div>
+      <div>
+        <Reveal>
+          <p aria-hidden className="font-display text-[9rem] leading-none font-bold tracking-tighter text-gradient sm:text-[13rem]">404</p>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <h1 className="mt-2 font-display text-4xl font-bold tracking-tight text-brand-950 sm:text-5xl">{notFoundContent.title}</h1>
+        </Reveal>
+        <Reveal delay={0.14}>
+          <p className="mx-auto mt-4 max-w-md text-[17px] text-slate-600">{notFoundContent.message}</p>
+        </Reveal>
+        <Reveal delay={0.2} className="mt-10">
+          <Button href={notFoundContent.button.href} icon={<Home className="size-4" aria-hidden />} size="lg">{notFoundContent.button.label}</Button>
+        </Reveal>
       </div>
-      <div id="80f4084f-618c-402d-aa43-044dbefe795a" className="widget widget-popup widget-popup-popup-1" />
-      <div id="9e65371f-f167-42fb-84f1-f53de633d681" className="widget widget-trustedsite widget-trustedsite-trusted-site-1" />
-      <CookieBanner />
-    </PageShell>
+    </section>
   );
 }

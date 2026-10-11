@@ -1,0 +1,142 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  /* Brand blue (the original theme color #115793), the logo's warm accent and teal. */
+  --color-brand-50: #eef6fc;
+  --color-brand-100: #d8eaf7;
+  --color-brand-200: #b5d6ef;
+  --color-brand-300: #84bae3;
+  --color-brand-400: #4f96d0;
+  --color-brand-500: #2a78bb;
+  --color-brand-600: #115793;
+  --color-brand-700: #0f4a7c;
+  --color-brand-800: #103f67;
+  --color-brand-900: #0f3455;
+  --color-brand-950: #0a2139;
+  --color-accent-300: #ffc078;
+  --color-accent-400: #ffa94d;
+  --color-accent-500: #f7931e;
+  --color-accent-600: #e57712;
+  --color-teal-brand: #5cc8c2;
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-league-spartan), var(--font-manrope), ui-sans-serif, sans-serif;
+
+  --shadow-soft: 0 10px 40px -12px rgb(15 52 85 / 0.18);
+  --shadow-card: 0 24px 60px -24px rgb(15 52 85 / 0.35);
+  --shadow-glow: 0 0 0 1px rgb(17 87 147 / 0.08), 0 30px 80px -30px rgb(17 87 147 / 0.55);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-progress: progress var(--progress-duration, 7s) linear forwards;
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-marquee-reverse: marquee var(--marquee-duration, 40s) linear infinite reverse;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-spin-slow: spin 18s linear infinite;
+
+  @keyframes progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(calc(-50% - var(--marquee-gap, 0px) / 2)); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-white font-sans text-slate-700;
+  }
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+  /* Anchor targets land below the sticky navbar. */
+  [id] {
+    scroll-margin-top: 96px;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand-500;
+  }
+}
+
+@utility glass {
+  @apply border border-white/50 bg-white/70 backdrop-blur-xl;
+}
+
+@utility glass-dark {
+  @apply border border-white/10 bg-white/[0.06] backdrop-blur-xl;
+}
+
+@utility text-gradient {
+  @apply bg-gradient-to-r from-brand-600 via-brand-500 to-teal-brand bg-clip-text text-transparent;
+}
+
+/* ------------------------------------------------------------------------------------------------
+ * View transitions (React <ViewTransition>): pages crossfade with a soft rise, the navbar stays put
+ * and shared images morph between list and detail pages.
+ * ------------------------------------------------------------------------------------------------ */
+::view-transition {
+  pointer-events: none;
+}
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+::view-transition-old(.page) {
+  animation: 160ms ease-in both vt-fade reverse, 160ms ease-in both vt-rise reverse;
+}
+::view-transition-new(.page) {
+  animation: 260ms ease-out 120ms both vt-fade, 420ms var(--ease-out-expo) both vt-rise;
+}
+::view-transition-group(.morph) {
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-out-expo);
+}
+::view-transition-image-pair(.morph) {
+  animation-name: vt-blur;
+}
+@keyframes vt-fade {
+  from { opacity: 0; filter: blur(4px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes vt-rise {
+  from { transform: translateY(14px); }
+  to { transform: translateY(0); }
+}
+@keyframes vt-blur {
+  30% { filter: blur(3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
