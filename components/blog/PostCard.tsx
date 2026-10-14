@@ -37,9 +37,9 @@ export default function PostCard({ post, readMore, featured = false }: Props) {
           <span className="flex items-center gap-1.5"><CalendarDays className="size-4 text-brand-400" aria-hidden />{formatDate(post.date)}</span>
           <span className="flex items-center gap-1.5"><Clock3 className="size-4 text-brand-400" aria-hidden />{post.readingMinutes} min read</span>
         </p>
-        <h3 className={`mt-4 font-display font-bold tracking-tight text-brand-950 transition-colors group-hover:text-brand-600 ${featured ? 'text-3xl sm:text-4xl' : 'text-[1.4rem] leading-snug'}`}>
+        <h2 className={`mt-4 font-display font-bold tracking-tight text-brand-950 transition-colors group-hover:text-brand-600 ${featured ? 'text-3xl sm:text-4xl' : 'text-[1.4rem] leading-snug'}`}>
           {post.title}
-        </h3>
+        </h2>
         {post.excerpt && <p className={`mt-3 text-slate-600 ${featured ? 'text-[17px] leading-relaxed' : 'line-clamp-3 text-[15px]'}`}>{post.excerpt}</p>}
         <span className="mt-auto inline-flex items-center gap-2 pt-6 text-[14px] font-bold text-brand-600">
           {readMore}

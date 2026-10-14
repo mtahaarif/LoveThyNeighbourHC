@@ -8,6 +8,7 @@ import ServicesShowcase from '@/components/home/ServicesShowcase';
 import CtaBand from '@/components/home/CtaBand';
 import ContactSection from '@/components/home/ContactSection';
 import NewsletterSection from '@/components/home/NewsletterSection';
+import BusinessJsonLd from '@/components/seo/BusinessJsonLd';
 import { pageMetadata } from '@/content/metadata';
 
 export const metadata: Metadata = pageMetadata['/'];
@@ -15,6 +16,7 @@ export const metadata: Metadata = pageMetadata['/'];
 export default function HomePage() {
   return (
     <PageTransition>
+      <BusinessJsonLd />
       <HomeHero />
       <CredentialsMarquee />
       <CareHighlights />

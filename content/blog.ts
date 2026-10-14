@@ -3,6 +3,8 @@ import type { BlogPost } from './types';
 
 export const blog = {
   "title": "Blogs",
+  /** On-page headline (the nav label "Blogs" alone is too thin for an H1). */
+  "heading": "Home Health Care Blog",
   "categories": [
     "All Posts",
     "Health"
@@ -20,7 +22,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/V5Bje8m.jpg",
       "width": 1254,
       "height": 836,
-      "alt": "Healthcare Professionals at Home"
+      "alt": "A nurse kneeling to talk with an elderly woman in a wheelchair in a bright corridor"
     },
     "categories": [],
     "excerpt": "Home Health Care: Professional Healthcare in the Comfort of Home",
@@ -35,7 +37,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/2212374816.jpg",
       "width": 2120,
       "height": 1414,
-      "alt": "Embracing Compassionate Home Healthcare"
+      "alt": "A smiling young woman hugging her elderly mother from behind on a sofa at home"
     },
     "categories": [],
     "excerpt": "The Future of Healing Begins at Home",
@@ -50,7 +52,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/10494.jpg",
       "width": 2160,
       "height": 1440,
-      "alt": "The 5 Essentials Every Family Should Consider for Aging at Home"
+      "alt": "A nurse with a stethoscope holding an elderly patient’s hand resting on a blanket"
     },
     "categories": [],
     "excerpt": "As more families explore alternatives to assisted living facilities and nursing homes, home health care has become an increasingly popular solution. Aging at home allows seniors to remain in a familiar environment while ...",
@@ -65,7 +67,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/images-achc.jpg",
       "width": 225,
       "height": 225,
-      "alt": "Love Thy Neighbor Home Health Care, Inc.'s Committment to ACHC"
+      "alt": "Gold seal of the Accreditation Commission for Health Care (ACHC)"
     },
     "categories": [],
     "excerpt": "When choosing a home health care provider, families want more than just services — they want trust, compassion, safety, and quality care that truly puts patients first. At Love Thy Neighbor Home Health Care, Inc., mainta...",
@@ -80,7 +82,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc.png",
       "width": 991,
       "height": 328,
-      "alt": "Inclusive Home Health Care for Florida Families"
+      "alt": "Love Thy Neighbor Home Health Care, Inc. logo"
     },
     "categories": [],
     "excerpt": "Love Thy Neighbor Home Health Care, Inc.: Compassionate and Inclusive Care for Every Patient",
@@ -95,7 +97,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/4070.jpg",
       "width": 2160,
       "height": 1440,
-      "alt": "7 Signs My Parent Needs Home Care"
+      "alt": "A caregiver in blue scrubs warmly embracing a smiling elderly woman in a wheelchair"
     },
     "categories": [],
     "excerpt": "Signs My Parent Needs Home Care",
@@ -110,7 +112,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/10238.jpg",
       "width": 2160,
       "height": 1440,
-      "alt": "Is Home Health Care Covered by Insurance?"
+      "alt": "A clinician filling in a patient form on a clipboard beside a patient resting in bed"
     },
     "categories": [],
     "excerpt": "When families begin exploring home health care services, one of the first and most important questions they ask is: “Will insurance cover this?” The answer is often yes, but coverage depends on the type of insurance plan...",
@@ -125,7 +127,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/9566.jpg",
       "width": 2164,
       "height": 1440,
-      "alt": "Signs Your Loved One May Need Home Health Care"
+      "alt": "A caregiver helping an elderly man settle into bed in a softly lit bedroom"
     },
     "categories": [],
     "excerpt": "Caring for an aging parent or loved one is one of the most meaningful roles a family member can take on—but it can also be overwhelming. Many families aren’t sure when it’s the right time to bring in professional support...",
@@ -140,7 +142,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/Home-Health-Care.jpg",
       "width": 1280,
       "height": 960,
-      "alt": "Patient Education: Understanding Hospice vs. Home Health Care"
+      "alt": "Comparison chart of home health care versus hospice care by goal, time frame, treatment and cost"
     },
     "categories": [],
     "excerpt": "Making healthcare decisions for yourself or a loved one can feel overwhelming - especially when terms like hospice care and home health care are often used interchangeably. While both provide care in the comfort of home,...",
@@ -155,7 +157,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/wNAR7OY.jpg",
       "width": 1254,
       "height": 836,
-      "alt": "Building Trust in Home Health Care: A Guide for Families"
+      "alt": "A nurse with a tablet talking with a smiling older woman seated in her living room"
     },
     "categories": [],
     "excerpt": "Choosing the right care for yourself or a loved one is one of the most important decisions you will ever make. Home health care offers a compassionate, personalized solution - but naturally, trust is at the heart of that...",
@@ -170,7 +172,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/pexels-thirdman-7659695.jpg",
       "width": 2560,
       "height": 1707,
-      "alt": "What Does a Skilled Nurse Do in Home Health Care?"
+      "alt": "A home health nurse visiting a young boy sitting on his bed"
     },
     "categories": [
       "Health"
@@ -187,7 +189,7 @@ export const posts: BlogPost[] = [
       "src": "/assets/images/pexels-pavel-danilyuk-7653119.jpg",
       "width": 2560,
       "height": 1709,
-      "alt": "What Is Home Health Care and Who Qualifies for It?"
+      "alt": "A doctor visiting a mother and daughter on the sofa in their living room"
     },
     "categories": [
       "Health"

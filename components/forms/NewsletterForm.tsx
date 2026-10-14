@@ -39,7 +39,7 @@ export default function NewsletterForm({ label, button }: { label: string; butto
           <PartyPopper className="size-5 text-accent-300" aria-hidden /> {formMessages.subscribeSuccess}
         </motion.p>
       ) : (
-        <motion.form key="form" exit={{ opacity: 0 }} onSubmit={onSubmit} noValidate className="w-full max-w-xl">
+        <motion.form key="form" method="post" action="/api/subscribe" exit={{ opacity: 0 }} onSubmit={onSubmit} noValidate className="w-full max-w-xl">
           <div className="flex flex-col gap-3 rounded-[1.75rem] bg-white/10 p-2 ring-1 ring-white/20 backdrop-blur-xl sm:flex-row sm:rounded-full">
             <label htmlFor="newsletter-email" className="sr-only">{label}</label>
             <input

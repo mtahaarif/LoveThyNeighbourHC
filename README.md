@@ -71,6 +71,7 @@ npx tsc --noEmit     # type-check only
 | Variable | Used by | Purpose |
 | --- | --- | --- |
 | `FORMS_WEBHOOK_URL` | `lib/form-submissions.ts` | When set, contact and newsletter submissions are POSTed there as JSON (Zapier, Make, Slack, your own mail service…). When unset, submissions are only logged on the server. |
+| `NEXT_PUBLIC_SITE_URL` | `lib/site-url.ts` | Absolute origin for canonical URLs, Open Graph, `sitemap.xml`, `robots.txt` and `llms.txt` (e.g. `https://lovethyneighborhhc.com`). Falls back to Vercel's `VERCEL_PROJECT_PRODUCTION_URL`, then `http://localhost:3000`. The TrustedSite seal only loads when this resolves to `lovethyneighborhhc.com`. |
 
 Create a `.env.local` file for local values (`.env*` files are git-ignored).
 
@@ -210,7 +211,7 @@ components/
 
 content/     types.ts + one data module per area (see §8)
 lib/         dates, hours, form-submissions, use-media-query, use-prefers-reduced-motion
-public/      assets/images, assets/fonts, manifest.webmanifest, robots.txt, sitemap*.xml
+public/      assets/images, assets/fonts, banner photos, manifest.webmanifest
 ```
 
 ---
@@ -276,7 +277,7 @@ All copy, images and metadata live in typed modules. The shapes are defined in `
 | `account.ts` | `login`, `account`, `reset`, `create`, `create-account`: title, message, fields, submit label, links, note |
 | `not-found.ts` | 404 title, message and button |
 | `blog.ts` | Blog title, categories (`All Posts`, `Health`), "Continue Reading" label, 12 posts newest first, `getPost(slug)` |
-| `metadata.ts` | `pageMetadata`: Next.js `Metadata` objects for all 32 original routes (title, description, canonical, Open Graph, Twitter, local OG images) |
+| `metadata.ts` | `pageMetadata`: Next.js `Metadata` for every route, built from one title/description table (canonical, Open Graph, Twitter, `noindex` for account pages); `indexablePages` feeds the sitemap and llms.txt |
 
 **Rich text safety.** HTML strings were sanitized when they were extracted: only the tags listed above survive,
 every class/style/data attribute was removed, GoDaddy wrappers were unwrapped, empty paragraphs were dropped,
@@ -605,33 +606,90 @@ browser's View Transitions API. No configuration is needed.
 
 ## 17. SEO, metadata and static files
 
-- **Per-page metadata:** every route exports the original page's metadata from `content/metadata.ts` (title,
-  description, canonical where the original had one, Open Graph, Twitter). Blog posts use `generateMetadata`.
-  Open Graph images point at the local copies; `metadataBase` (`https://lovethyneighborhhc.com`) makes them
-  absolute.
-- **Global metadata (`app/layout.tsx`):** `authors`, `manifest`, Google Search Console verification token,
-  favicons (16–64px) and Apple touch icons (57–180px) from the original site; viewport `themeColor #115793`.
-- **Language:** `<html lang="en-PH">`, kept from the original site.
-- **Static SEO files in `public/`:**
-  - `robots.txt` (the original's: `Disallow: /404`)
-  - `sitemap.xml` (index) → `sitemap.website.xml` and `sitemap.blog.xml` (the original GoDaddy sitemaps; the
-    original's empty store/appointments sitemaps were dropped)
-  - `manifest.webmanifest` (name, theme/background color `#115793`, 192/512 icons)
+Tuned against a SiteChecker technical audit (Oct 2026). What each finding led to:
+
+- **Site URL (`lib/site-url.ts`).** One absolute origin drives `metadataBase`, canonicals, Open Graph URLs, the
+  sitemap, robots and llms.txt, so a deployment never points search engines at a different domain (the audit's
+  critical "canonical points to external URL" on every blog post).
+- **Per-page metadata (`content/metadata.ts`).** One table of `{ title, description }` per route plus a builder
+  that adds a self-referencing canonical, a complete Open Graph set (title, description, image, url, `en_US`) and
+  a `summary_large_image` Twitter card. Titles are 30–60 characters and descriptions 70–160 (several were missing,
+  truncated or 223 characters long). Blog posts get their own SEO titles/descriptions where the on-page title
+  or excerpt didn't fit (`postSeo`), `type: article` and `publishedTime`. Account pages and the 404 are `noindex`.
+- **Structured data (`components/seo/`).** JSON-LD: `MedicalBusiness` on Home (address, geo, phone, hours, the
+  four counties served, services), `FAQPage` on FAQs, `BlogPosting` on each post and a `BreadcrumbList` from every
+  `PageHero` breadcrumb.
+- **Generated SEO files (`app/`).** `sitemap.ts` (every indexable page, posts with their publish date),
+  `robots.ts` (open to every crawler, AI answer engines included; `/api/` and `/m/` disallowed; declares the
+  sitemap) and `llms.txt/route.ts` (a map of the site for answer engines). The original GoDaddy `robots.txt` and
+  `sitemap*.xml` in `public/` were removed: they pointed at the old domain.
+- **Content and markup.**
+  - FAQs were rewritten from GoDaddy's placeholder questions into eight real ones. They use only facts stated
+    elsewhere on the site.
+  - All FAQ answers stay in the HTML (collapsed with CSS, `inert`), and the questions are `h2`s.
+  - The blog index H1 reads "Home Health Care Blog".
+  - Heading levels never skip:
+    - FAQ questions: h2
+    - How to Get Started form title: h2, via `ContactForm`'s `headingLevel`
+    - blog cards: h2
+  - Insurance partners now show their names, and the marquee copy is decorative.
+  - Blog hero images have descriptive alt text instead of repeating the post title.
+  - Duplicated decorative images use `alt=""`:
+    - footer logo
+    - About collage
+    - marquee copies (also `inert`)
+  - "Learn more" links carry screen-reader text naming their destination.
+  - The footer links the three "Why Choose Us" pages, and each post links the next three posts, so no page is
+    left with only a couple of internal links.
+- **Forms** declare `method="post"` with a real `action`. With JavaScript off they still submit: the API
+  routes accept form data and redirect back with `?form=sent|error`.
+- **Language:** `<html lang="en-US">` (the business is in Florida; the GoDaddy original said `en-PH`).
+- **Static files kept:** `manifest.webmanifest` (name, theme/background color `#115793`, 192/512 icons).
 - URLs are unchanged from the original site.
+
+### Security headers (`next.config.ts`)
+
+Every response carries:
+
+- **Content-Security-Policy:**
+  - scripts: self plus the TrustedSite seal domains
+  - frames: Google Maps only
+  - `frame-ancestors 'self'`, `object-src 'none'`
+  - `'unsafe-inline'` stays, because statically prerendered App Router pages stream inline scripts; a nonce would
+    make every page dynamic
+- **X-Frame-Options:** `SAMEORIGIN`
+- **X-Content-Type-Options:** `nosniff`
+- **Referrer-Policy**, **Permissions-Policy** and **HSTS**
+- `X-Powered-By` is removed.
 
 ---
 
 ## 18. Performance
 
 - **Static prerendering** of all pages; blog posts via `generateStaticParams`.
-- **`next/image`** everywhere, with `sizes` hints; responsive variants are generated from the single
-  highest-resolution source per photo.
-- **Above-the-fold images** (logo, first hero slide, PageHero image, first About collage photo, featured blog card)
-  use `loading="eager"` (and `fetchPriority="high"` for main images) instead of the deprecated `priority` prop.
+- **Hero content paints without JavaScript.** Above-the-fold entrances (home hero text and photo, every
+  `PageHero` breadcrumb/H1/description/image) are CSS keyframes (`animate-rise`, `animate-settle` in
+  `globals.css`), not Motion's `initial={{ opacity: 0 }}`, which server-renders hidden content and holds LCP until
+  hydration. LCP elements are never faded: `settle` only moves.
+  - Measured with devtools throttling, LCP went from 5.7 s to 2.7 s (home) and from 3.4 s to 2.6 s (About).
+  - Scroll-triggered `Reveal` is still used below the fold.
+- **`next/image`** everywhere with `sizes` hints, AVIF then WebP (`images.formats`), 31-day optimizer cache.
+  Article images inside blog HTML are rewritten by `RichText` into optimizer `srcset`s with their intrinsic
+  width/height. The navbar and footer logos request about 160 px variants instead of 1,080/2,048 px preloads.
+- **Above-the-fold images** use `loading="eager"` and `fetchPriority="high"` for the main photo, instead of the
+  deprecated `priority` prop.
+- **Google Maps** (about 15 third-party scripts) is mounted only when the map nears the viewport. A placeholder
+  with the address and a "view on Google Maps" link holds its space.
+- **TrustedSite** loads `lazyOnload`, and only on its registered domain (elsewhere its config request 403s,
+  which showed up as console errors on every page).
+- **Blog index payload:** `BlogBrowser` receives only `{ slug, categories }` per post. Full posts (with their
+  HTML) are no longer serialized into the RSC payload, which was 66% of `/blogs`.
+- **Caching:**
+  - `/assets/*` (content-hashed originals): `max-age=1y, immutable`
+  - root banner photos: 30 days plus `stale-while-revalidate`
 - **Fonts:** self-hosted through `next/font` with `display: swap` and no layout shift.
-- **CSS-only effects** where possible (marquees, hover reveals, aurora backgrounds); Motion is used for scroll-linked
-  and stateful animation.
-- **Lazy** Google Maps iframe and below-the-fold images.
+- **CSS-only effects** where possible (marquees, hover reveals, aurora backgrounds). Motion is used for
+  scroll-linked and stateful animation.
 - **Partial Prefetching / Cache Components** are enabled (Next 16 defaults).
 
 ---
@@ -657,7 +715,7 @@ browser's View Transitions API. No configuration is needed.
 | --- | --- |
 | `assets/images/` (405 files, ≈ 43 MB) | Every image the original site referenced, downloaded from GoDaddy's CDN in all the size variants GoDaddy served (hero slides, service/blog photos, logos, insurer logos, favicons, touch icons). Only the largest variant of each photo is referenced; `next/image` makes responsive sizes from it. |
 | `assets/fonts/` (74 files, ≈ 2.4 MB) | The original site's web-font files (Montserrat, Poppins, Roboto, Fredoka One, Archivo Black, League Spartan + `league-spartan.css`). Kept as part of the full content download; **not used** by the redesign, which loads fonts through `next/font`. |
-| `manifest.webmanifest`, `robots.txt`, `sitemap*.xml` | See §17. |
+| `manifest.webmanifest` | See §17. (`robots.txt`, `sitemap.xml` and `llms.txt` are generated by `app/`.) |
 
 Logos: `Love-Thy-Neighbor-Home-Health-Care-Inc.png` (dark text, used on light backgrounds) and
 `Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png` (white text, used in the footer).
@@ -736,8 +794,8 @@ Any Node.js host that runs `next start`, or Vercel (zero configuration). Typical
 1. `npm ci && npm run build`
 2. `npm start` (port 3000, or `-p <port>`)
 3. Set `FORMS_WEBHOOK_URL` if form delivery is wanted.
-4. Point `lovethyneighborhhc.com` at the deployment. `metadataBase`, canonical URLs and the sitemaps assume
-   that domain.
+4. When `lovethyneighborhhc.com` points at the deployment, set `NEXT_PUBLIC_SITE_URL=https://lovethyneighborhhc.com`
+   and redeploy. Canonicals, the sitemap and llms.txt then use the real domain, and the TrustedSite seal turns on.
 
 ---
 
@@ -750,14 +808,16 @@ Any Node.js host that runs `next start`, or Vercel (zero configuration). Typical
 - **Form delivery** needs `FORMS_WEBHOOK_URL` (or replace `deliver()` with an email provider). Without it,
   submissions are only logged.
 - **Placeholder content inherited from the original site** should be replaced by the business:
-  - the FAQ answers are GoDaddy template text ("…provides X, Y, and Z services…", "When will … launch?");
+  - the FAQ page has been rewritten from facts elsewhere on the site (see §17); have the agency review it;
+  - Insurance Information and How to Get Started are short (about 100–170 words); a paragraph or two of real
+    copy would lift them above the "thin content" threshold;
   - the three highlight pages' sections (Our Story, Our Community, Our Features, …) describe a generic
     "platform" rather than the agency;
   - the Instagram link is `https://www.instagram.com/page` (placeholder in the original).
 - **Map.** The original used GoDaddy's Google Maps widget (with a "Get directions" control). It's replaced by the
   key-less Google Maps embed at the same location and zoom.
-- **TrustedSite badge.** The original's TrustedSite script is still loaded in `app/layout.tsx`. The service
-  validates the domain, so on `localhost` it answers 403 and shows nothing.
+- **TrustedSite badge.** The original's TrustedSite script loads only when the site URL is `lovethyneighborhhc.com`
+  (the service validates the domain and answers 403 anywhere else).
 - **Removed from the original:** the "Powered by GoDaddy Airo" footer badge, GoDaddy's service worker
   (`/sw.js`), its analytics/tracking scripts, reCAPTCHA, and its Reamaze chat-widget configuration (it wasn't
   visible on the original pages).

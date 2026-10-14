@@ -16,13 +16,13 @@ export default function BlogsPage() {
   const cards = Object.fromEntries(posts.map((p) => [p.slug, <PostCard key={p.slug} post={p} readMore={blog.readMore} />]));
   return (
     <PageTransition>
-      <PageHero background={{ desktop: '/blog-banner-desktop.png', mobile: '/blog-banner-mobile.png', focus: { desktop: 'center 50%', mobile: 'center 50%' } }} title={blog.title} crumbs={[{ label: blog.title }]} />
+      <PageHero background={{ desktop: '/blog-banner-desktop.png', mobile: '/blog-banner-mobile.png', focus: { desktop: 'center 50%', mobile: 'center 50%' } }} title={blog.heading} crumbs={[{ label: blog.title }]} />
 
       <section className="bg-gradient-to-b from-brand-50/60 to-white py-16 lg:py-24">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
           <BlogBrowser
             categories={blog.categories}
-            posts={posts}
+            posts={posts.map(({ slug, categories }) => ({ slug, categories }))}
             cards={cards}
             featuredSlug={featured.slug}
             featured={<PostCard post={featured} readMore={blog.readMore} featured />}

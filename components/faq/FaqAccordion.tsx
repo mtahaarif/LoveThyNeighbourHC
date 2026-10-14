@@ -1,12 +1,14 @@
 'use client';
 
 import { useId, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { Plus } from 'lucide-react';
 import RichText from '@/components/ui/RichText';
 import type { Rich } from '@/content/types';
 
-/** Accordion: one item open at a time, smooth height animation, rotating plus icon. */
+/**
+ * Accordion: one item open at a time, smooth height animation, rotating plus icon. Every answer stays in
+ * the HTML (collapsed with a grid-rows transition and made inert) so search engines read all of them.
+ */
 export default function FaqAccordion({ items }: { items: { question: string; answer: Rich }[] }) {
   const [open, setOpen] = useState<number | null>(0);
   const base = useId();
@@ -20,7 +22,7 @@ export default function FaqAccordion({ items }: { items: { question: string; ans
             key={item.question}
             className={`overflow-hidden rounded-[1.5rem] ring-1 transition-all duration-300 ${isOpen ? 'bg-white shadow-card ring-brand-200' : 'bg-white/70 ring-slate-900/5 hover:ring-brand-200'}`}
           >
-            <h3>
+            <h2>
               <button
                 type="button"
                 aria-expanded={isOpen}
@@ -37,22 +39,18 @@ export default function FaqAccordion({ items }: { items: { question: string; ans
                   <Plus className="size-5" aria-hidden />
                 </span>
               </button>
-            </h3>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <motion.div
-                  id={`${id}-panel`}
-                  role="region"
-                  aria-labelledby={`${id}-button`}
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  <RichText html={item.answer} className="px-6 pb-7 sm:px-8 sm:pl-[4.5rem]" />
-                </motion.div>
-              )}
-            </AnimatePresence>
+            </h2>
+            <div
+              id={`${id}-panel`}
+              role="region"
+              aria-labelledby={`${id}-button`}
+              inert={!isOpen}
+              className={`grid transition-[grid-template-rows,opacity] duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+            >
+              <div className="overflow-hidden">
+                <RichText html={item.answer} className="px-6 pb-7 sm:px-8 sm:pl-[4.5rem]" />
+              </div>
+            </div>
           </li>
         );
       })}

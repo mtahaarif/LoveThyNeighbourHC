@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { ViewTransition, type ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
 import type { Img } from '@/content/types';
+import { absoluteUrl } from '@/lib/site-url';
 import { Eyebrow } from './SectionHeading';
-import Reveal from './Reveal';
+import JsonLd from '@/components/seo/JsonLd';
 
 type Crumb = { label: string; href?: string };
 
@@ -56,37 +57,45 @@ export default function PageHero({ title, background, eyebrow, description, crum
       <div className={`mx-auto grid w-full max-w-[1320px] items-center gap-12 px-4 py-16 sm:px-6 lg:px-8 ${image ? 'lg:grid-cols-[1.15fr_1fr] lg:py-20' : 'lg:py-24'}`}>
         <div className={image ? '' : 'mx-auto max-w-3xl text-center'}>
           {crumbs.length > 0 && (
-            <Reveal y={12}>
-              <nav aria-label="Breadcrumb">
-                <ol className={`flex flex-wrap items-center gap-1.5 text-[13px] font-semibold text-brand-200 ${image ? '' : 'justify-center'}`}>
-                  {[{ label: 'Home', href: '/' }, ...crumbs].map((c, i, all) => (
-                    <li key={c.label} className="flex items-center gap-1.5">
-                      {c.href && i < all.length - 1 ? (
-                        <Link href={c.href} className="transition-colors hover:text-white">{c.label}</Link>
-                      ) : (
-                        <span aria-current="page" className="text-white">{c.label}</span>
-                      )}
-                      {i < all.length - 1 && <ChevronRight className="size-3.5 text-brand-300/60" aria-hidden />}
-                    </li>
-                  ))}
-                </ol>
-              </nav>
-            </Reveal>
+            <JsonLd
+              data={{
+                '@context': 'https://schema.org',
+                '@type': 'BreadcrumbList',
+                itemListElement: [{ label: 'Home', href: '/' }, ...crumbs].map((c, i) => ({
+                  '@type': 'ListItem',
+                  position: i + 1,
+                  name: c.label,
+                  ...(c.href ? { item: absoluteUrl(c.href) } : {}),
+                })),
+              }}
+            />
           )}
-          {eyebrow && <Reveal y={12} delay={0.05} className="mt-6"><div className={image ? '' : 'flex justify-center'}><Eyebrow tone="dark">{eyebrow}</Eyebrow></div></Reveal>}
-          <Reveal delay={0.1}>
-            <h1 className="mt-5 font-display text-4xl leading-[1.04] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">{title}</h1>
-          </Reveal>
+          {crumbs.length > 0 && (
+            <nav aria-label="Breadcrumb" className="animate-rise">
+              <ol className={`flex flex-wrap items-center gap-1.5 text-[13px] font-semibold text-brand-200 ${image ? '' : 'justify-center'}`}>
+                {[{ label: 'Home', href: '/' }, ...crumbs].map((c, i, all) => (
+                  <li key={c.label} className="flex items-center gap-1.5">
+                    {c.href && i < all.length - 1 ? (
+                      <Link href={c.href} className="transition-colors hover:text-white">{c.label}</Link>
+                    ) : (
+                      <span aria-current="page" className="text-white">{c.label}</span>
+                    )}
+                    {i < all.length - 1 && <ChevronRight className="size-3.5 text-brand-300/60" aria-hidden />}
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
+          {eyebrow && <div className={`mt-6 animate-rise [animation-delay:50ms] ${image ? '' : 'flex justify-center'}`}><Eyebrow tone="dark">{eyebrow}</Eyebrow></div>}
+          <h1 className="mt-5 animate-rise font-display [animation-delay:100ms] text-4xl leading-[1.04] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">{title}</h1>
           {description && (
-            <Reveal delay={0.18}>
-              <div className={`mt-6 text-[17px] leading-relaxed text-brand-100/85 ${image ? 'max-w-xl' : 'mx-auto max-w-2xl'}`}>{description}</div>
-            </Reveal>
+            <div className={`mt-6 animate-rise text-[17px] [animation-delay:180ms] leading-relaxed text-brand-100/85 ${image ? 'max-w-xl' : 'mx-auto max-w-2xl'}`}>{description}</div>
           )}
-          {children && <Reveal delay={0.24} className="mt-8">{children}</Reveal>}
+          {children && <div className="mt-8 animate-rise [animation-delay:240ms]">{children}</div>}
         </div>
 
         {image && (
-          <Reveal delay={0.15} y={40} className="relative">
+          <div className="relative animate-settle">
             <div className="absolute -inset-4 -z-10 rounded-[2.5rem] bg-gradient-to-br from-brand-400/30 via-transparent to-teal-brand/30 blur-2xl" />
             <div className="rotate-[1.5deg] rounded-[2rem] p-2 glass-dark transition-transform duration-700 hover:rotate-0">
               <ViewTransition name={imageTransitionName} share={imageTransitionName ? 'morph' : undefined} default="none">
@@ -95,7 +104,7 @@ export default function PageHero({ title, background, eyebrow, description, crum
                 </div>
               </ViewTransition>
             </div>
-          </Reveal>
+          </div>
         )}
       </div>
       <div aria-hidden className="h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />

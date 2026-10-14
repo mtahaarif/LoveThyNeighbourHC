@@ -8,6 +8,7 @@ import FaqAccordion from '@/components/faq/FaqAccordion';
 import { faqs } from '@/content/faqs';
 import { home } from '@/content/home';
 import { site } from '@/content/site';
+import JsonLd from '@/components/seo/JsonLd';
 import { pageMetadata } from '@/content/metadata';
 
 export const metadata: Metadata = pageMetadata['/faqs'];
@@ -15,6 +16,17 @@ export const metadata: Metadata = pageMetadata['/faqs'];
 export default function FaqsPage() {
   return (
     <PageTransition>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqs.items.map((f) => ({
+            '@type': 'Question',
+            name: f.question,
+            acceptedAnswer: { '@type': 'Answer', text: f.answer.replace(/<[^>]+>/g, '').trim() },
+          })),
+        }}
+      />
       <PageHero background={{ desktop: '/faqs-banner-desktop.png', mobile: '/faqs-banner-mobile.png', focus: { desktop: 'center 25%', mobile: 'center 48%' } }} title={faqs.title} crumbs={[{ label: 'FAQs' }]} />
       <section className="bg-gradient-to-b from-brand-50/60 to-white py-20 lg:py-28">
         <div className="mx-auto grid max-w-[1320px] gap-12 px-4 sm:px-6 lg:grid-cols-[22rem_1fr] lg:px-8">

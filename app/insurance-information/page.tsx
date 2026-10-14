@@ -15,10 +15,11 @@ import type { Img } from '@/content/types';
 
 export const metadata: Metadata = pageMetadata['/insurance-information'];
 
+// Decorative: the same logos are listed (with names and alt text) in the grid below.
 function LogoTile({ logo }: { logo: Img }) {
   return (
     <span className="flex h-24 w-52 shrink-0 items-center justify-center rounded-2xl bg-white px-6 shadow-soft ring-1 ring-slate-900/5">
-      <Image src={logo.src} alt={logo.alt} width={logo.width} height={logo.height} className="max-h-14 w-auto object-contain" />
+      <Image src={logo.src} alt="" width={logo.width} height={logo.height} className="max-h-14 w-auto object-contain" />
     </span>
   );
 }
@@ -31,17 +32,18 @@ export default function InsurancePage() {
       <PageHero background={{ desktop: '/insurance-banner-desktop.png', mobile: '/insurance-banner-mobile.png', focus: { desktop: 'center 50%', mobile: 'center 70%' } }} title={insurance.title} crumbs={[{ label: insurance.title }]} />
 
       {/* Two marquee rows in opposite directions */}
-      <section aria-label="Insurance partners" className="space-y-5 overflow-hidden bg-gradient-to-b from-brand-50/80 to-white py-14">
+      <section aria-hidden className="space-y-5 overflow-hidden bg-gradient-to-b from-brand-50/80 to-white py-14">
         <Marquee duration={32} gap={20}>{logos.slice(0, half).concat(logos.slice(0, half)).map((l, i) => <LogoTile key={l.src + i} logo={l} />)}</Marquee>
         <Marquee duration={36} gap={20} reverse>{logos.slice(half).concat(logos.slice(half)).map((l, i) => <LogoTile key={l.src + i} logo={l} />)}</Marquee>
       </section>
 
       {/* Glow grid */}
-      <section className="bg-white py-16 lg:py-24">
+      <section aria-labelledby="partners-title" className="bg-white py-16 lg:py-24">
+        <h2 id="partners-title" className="mx-auto mb-10 max-w-[1320px] px-4 text-center font-display text-3xl font-bold tracking-tight text-brand-950 sm:px-6 sm:text-4xl lg:px-8">Our Partnered Insurances</h2>
         <ul className="mx-auto grid max-w-[1320px] grid-cols-2 gap-5 px-4 sm:px-6 md:grid-cols-4 lg:px-8">
           {logos.map((l, i) => (
             <Reveal as="li" key={l.src} delay={(i % 4) * 0.07}>
-              <GlowCard className="flex h-40 items-center justify-center p-8">
+              <GlowCard className="flex h-44 flex-col items-center justify-center gap-4 p-6">
                 <Image
                   src={l.src}
                   alt={l.alt}
@@ -49,6 +51,7 @@ export default function InsurancePage() {
                   height={l.height}
                   className="max-h-16 w-auto object-contain opacity-70 grayscale transition-all duration-500 group-hover/glow:scale-105 group-hover/glow:opacity-100 group-hover/glow:grayscale-0"
                 />
+                <span className="text-center text-[14px] font-bold text-brand-900">{l.name}</span>
               </GlowCard>
             </Reveal>
           ))}

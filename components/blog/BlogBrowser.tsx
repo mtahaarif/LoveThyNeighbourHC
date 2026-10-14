@@ -2,11 +2,11 @@
 
 import { useState, type ReactNode } from 'react';
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
-import type { BlogPost } from '@/content/types';
 
 type Props = {
   categories: string[];
-  posts: BlogPost[];
+  /** Only what filtering needs: the cards arrive pre-rendered, so full posts never cross to the client. */
+  posts: { slug: string; categories: string[] }[];
   /** Pre-rendered cards keyed by slug (server components, so the shared-element names stay server-rendered). */
   cards: Record<string, ReactNode>;
   featured: ReactNode;

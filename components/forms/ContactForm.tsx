@@ -6,11 +6,11 @@ import { CheckCircle2, Loader2, Send } from 'lucide-react';
 import FloatingField from './FloatingField';
 import { EMAIL_RE, formMessages } from './messages';
 
-type Props = { title: string; submit?: string; tone?: 'light' | 'dark' };
+type Props = { title: string; submit?: string; tone?: 'light' | 'dark'; /** Keeps the page outline in order (h1 → h2 → h3). */ headingLevel?: 'h2' | 'h3' };
 type State = 'idle' | 'sending' | 'done';
 
 /** Name / Email* / Message form posting to /api/contact. */
-export default function ContactForm({ title, submit = 'Send', tone = 'light' }: Props) {
+export default function ContactForm({ title, submit = 'Send', tone = 'light', headingLevel: Heading = 'h3' }: Props) {
   const [state, setState] = useState<State>('idle');
   const [error, setError] = useState<string>();
   const [failure, setFailure] = useState<string>();
@@ -55,8 +55,8 @@ export default function ContactForm({ title, submit = 'Send', tone = 'light' }: 
             <p className={`mt-6 max-w-sm font-display text-2xl font-bold ${dark ? 'text-white' : 'text-brand-950'}`}>{formMessages.contactSuccess}</p>
           </motion.div>
         ) : (
-          <motion.form key="form" exit={{ opacity: 0, y: -10 }} onSubmit={onSubmit} noValidate className="space-y-4">
-            <h3 className={`font-display text-2xl font-bold ${dark ? 'text-white' : 'text-brand-950'}`}>{title}</h3>
+          <motion.form key="form" method="post" action="/api/contact" exit={{ opacity: 0, y: -10 }} onSubmit={onSubmit} noValidate className="space-y-4">
+            <Heading className={`font-display text-2xl font-bold ${dark ? 'text-white' : 'text-brand-950'}`}>{title}</Heading>
             <FloatingField name="name" label="Name" autoComplete="name" tone={tone} />
             <FloatingField name="email" type="email" label="Email*" autoComplete="email" required error={error} tone={tone} />
             <FloatingField name="message" label="Message" multiline tone={tone} />

@@ -33,6 +33,17 @@
   --animate-marquee-reverse: marquee var(--marquee-duration, 40s) linear infinite reverse;
   --animate-float: float 7s ease-in-out infinite;
   --animate-spin-slow: spin 18s linear infinite;
+  /* Above-the-fold entrances run in CSS so they start at first paint (no wait for hydration → fast LCP). */
+  --animate-rise: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-settle: settle 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+  }
+  /* Movement only, never hidden: used on LCP images so they count as painted immediately. */
+  @keyframes settle {
+    from { transform: translateY(22px) scale(0.98); }
+  }
 
   @keyframes progress {
     from { transform: scaleX(0); }
@@ -136,6 +147,7 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

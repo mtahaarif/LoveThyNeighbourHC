@@ -2,11 +2,26 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type Submission = Record<string, string>;
 
-/** Reads a JSON body of string fields, keeping only the allowed keys (trimmed, length-capped). */
+/** True for a plain HTML form post (JavaScript off), which expects a page back rather than JSON. */
+export const isFormPost = (request: Request) => !(request.headers.get('content-type') ?? '').includes('application/json');
+
+/** After a plain form post, sends the visitor back to the page they came from. */
+export function backToForm(request: Request, ok: boolean) {
+  const self = new URL(request.url);
+  let back = new URL(request.headers.get('referer') ?? '/', self);
+  if (back.origin !== self.origin) back = new URL('/', self); // never redirect off-site
+  back.searchParams.set('form', ok ? 'sent' : 'error');
+  return Response.redirect(back, 303);
+}
+
+/**
+ * Reads the submitted string fields (a JSON body from the enhanced forms, or form data when JavaScript is
+ * off), keeping only the allowed keys (trimmed, length-capped).
+ */
 export async function readSubmission(request: Request, fields: string[]): Promise<Submission | null> {
   let body: unknown;
   try {
-    body = await request.json();
+    body = isFormPost(request) ? Object.fromEntries(await request.formData()) : await request.json();
   } catch {
     return null;
   }

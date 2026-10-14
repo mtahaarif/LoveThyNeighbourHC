@@ -20,7 +20,7 @@ export default function GetStartedPage() {
         <div aria-hidden className="absolute top-20 -right-40 -z-10 size-[28rem] rounded-full bg-brand-200/40 blur-3xl" />
         <div className="mx-auto grid max-w-[1320px] gap-10 px-4 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:px-8">
           <Reveal y={40} className="rounded-[2rem] p-7 shadow-card glass sm:p-10 lg:sticky lg:top-28 lg:self-start">
-            <ContactForm title={getStarted.formTitle} submit={getStarted.submit} />
+            <ContactForm title={getStarted.formTitle} submit={getStarted.submit} headingLevel="h2" />
           </Reveal>
 
           <div className="space-y-5">

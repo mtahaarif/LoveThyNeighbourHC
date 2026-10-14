@@ -4,7 +4,7 @@ import { ArrowUpRight, Clock3, Mail, MapPin, Phone } from 'lucide-react';
 import Marquee from '@/components/ui/Marquee';
 import { socialIcon } from '@/components/ui/BrandIcons';
 import { site } from '@/content/site';
-import { home } from '@/content/home';
+import { careHighlights, home } from '@/content/home';
 import { services } from '@/content/services';
 import { formatRange, groupHours } from '@/lib/hours';
 import { primaryNav } from '@/content/navigation';
@@ -38,7 +38,7 @@ export default function SiteFooter() {
       <div className="mx-auto grid max-w-[1320px] gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:px-8">
         <div>
           <Link href="/" aria-label={`${site.name} — Home`} className="inline-block">
-            <Image src="/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png" alt={site.name} width={551} height={180} className="h-14 w-auto" />
+            <Image src="/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png" alt="" width={172} height={56} className="h-14 w-auto" />
           </Link>
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-brand-100/75">{home.contact.intro}</p>
           <div className="mt-7">
@@ -79,6 +79,17 @@ export default function SiteFooter() {
               <li key={s.slug}>
                 <Link href={`/${s.slug}`} className="group inline-flex items-center gap-1.5 text-[15px] transition-colors hover:text-white">
                   {s.navLabel}
+                  <ArrowUpRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-9 font-display text-lg font-bold text-white">Why Choose Us</p>
+          <ul className="mt-5 space-y-3">
+            {careHighlights.cards.map((c) => (
+              <li key={c.href}>
+                <Link href={c.href} className="group inline-flex items-center gap-1.5 text-[15px] transition-colors hover:text-white">
+                  {c.title}
                   <ArrowUpRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" aria-hidden />
                 </Link>
               </li>

@@ -8,8 +8,10 @@ import PageTransition from '@/components/ui/PageTransition';
 import RichText from '@/components/ui/RichText';
 import { FacebookIcon, XIcon } from '@/components/ui/BrandIcons';
 import { blog, getPost, posts } from '@/content/blog';
-import { pageMetadata } from '@/content/metadata';
+import { pageMetadata, SITE_NAME } from '@/content/metadata';
+import JsonLd from '@/components/seo/JsonLd';
 import { formatDate } from '@/lib/dates';
+import { absoluteUrl } from '@/lib/site-url';
 
 // Every post is prerendered via generateStaticParams; navigation may block on the (static) payload.
 export const instant = false;
@@ -31,8 +33,9 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
   const index = posts.indexOf(post);
   const newer = posts[index - 1];
   const older = posts[index + 1];
-  const recent = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
-  const url = `https://lovethyneighborhhc.com/blogs/f/${post.slug}`;
+  // The next three posts (wrapping around), so every article is linked from several others, not just the newest.
+  const related = [1, 2, 3].map((n) => posts[(index + n) % posts.length]).filter((p) => p.slug !== post.slug);
+  const url = absoluteUrl(`/blogs/f/${post.slug}`);
   const share = [
     { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, Icon: FacebookIcon },
     { label: 'X', href: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(post.title)}`, Icon: XIcon },
@@ -40,6 +43,19 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
 
   return (
     <PageTransition>
+      <JsonLd
+        data={{
+          '@context': 'https://schema.org',
+          '@type': 'BlogPosting',
+          headline: post.title,
+          description: pageMetadata[`/blogs/f/${post.slug}`]?.description,
+          image: absoluteUrl(post.image.src),
+          datePublished: post.date,
+          mainEntityOfPage: url,
+          author: { '@type': 'Organization', name: `${SITE_NAME}, Inc.`, url: absoluteUrl('/') },
+          publisher: { '@type': 'Organization', name: `${SITE_NAME}, Inc.`, logo: { '@type': 'ImageObject', url: absoluteUrl('/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png') } },
+        }}
+      />
       <PageHero
         title={post.title}
         description={post.excerpt}
@@ -71,9 +87,9 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
               </ul>
             </div>
             <div className="rounded-[1.75rem] bg-white p-6 shadow-soft ring-1 ring-slate-900/5">
-              <p className="text-[12px] font-bold tracking-[0.2em] text-brand-600 uppercase">Recent Posts</p>
+              <p className="text-[12px] font-bold tracking-[0.2em] text-brand-600 uppercase">Related Posts</p>
               <ul className="mt-4 space-y-4">
-                {recent.map((p) => (
+                {related.map((p) => (
                   <li key={p.slug}>
                     <Link href={`/blogs/f/${p.slug}`} className="group flex gap-4">
                       <span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-brand-100">

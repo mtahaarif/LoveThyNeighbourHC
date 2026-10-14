@@ -70,7 +70,7 @@ function StackCard({ card, index, total, progress }: CardProps) {
               href={card.href}
               className="inline-flex items-center gap-2 rounded-full bg-brand-50 py-2.5 pr-5 pl-4 text-[14px] font-bold text-brand-700 no-underline transition-all hover:bg-brand-600 hover:text-white"
             >
-              Learn more
+              Learn more<span className="sr-only"> about {card.title}</span>
               <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
             </Link>
           </div>

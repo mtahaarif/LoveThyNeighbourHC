@@ -6,6 +6,8 @@ import SiteFooter from '@/components/layout/SiteFooter';
 import CookieConsent from '@/components/layout/CookieConsent';
 import ScrollProgress from '@/components/layout/ScrollProgress';
 import MotionProvider from '@/components/layout/MotionProvider';
+import { SITE_URL, TRUSTEDSITE_ENABLED } from '@/lib/site-url';
+import { SITE_NAME } from '@/content/metadata';
 import './globals.css';
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope', display: 'swap' });
@@ -15,8 +17,9 @@ const favicon = (size: number, file: string) => ({ url: `/assets/images/${file}`
 const touch = (size: number, file: string) => ({ url: `/assets/images/${file}`, sizes: `${size}x${size}` });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://lovethyneighborhhc.com'),
-  authors: [{ name: 'lovethyneighborhhc.com' }],
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  authors: [{ name: `${SITE_NAME}, Inc.` }],
   manifest: '/manifest.webmanifest',
   verification: { google: 'bC8nyUB4hW8_GfkHZG1eZdBNNgew6zpvcWPRk1fBLHA' },
   icons: {
@@ -48,7 +51,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en-PH" className={`${manrope.variable} ${leagueSpartan.variable}`}>
+    <html lang="en-US" className={`${manrope.variable} ${leagueSpartan.variable}`}>
       <body>
         <MotionProvider>
           <ScrollProgress />
@@ -57,7 +60,8 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           <SiteFooter />
           <CookieConsent />
         </MotionProvider>
-        <Script src="https://cdn.trustedsite.com/js/1.js?position=bottomLeft&offset=15" strategy="afterInteractive" />
+        {/* The seal is registered for lovethyneighborhhc.com; on any other host its config request fails (403). */}
+        {TRUSTEDSITE_ENABLED && <Script src="https://cdn.trustedsite.com/js/1.js?position=bottomLeft&offset=15" strategy="lazyOnload" />}
       </body>
     </html>
   );

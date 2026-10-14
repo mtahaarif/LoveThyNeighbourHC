@@ -32,7 +32,7 @@ export default function AccountForm({ fields, submit, phone }: Props) {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-4">
+    <form method="post" onSubmit={onSubmit} noValidate className="space-y-4">
       <div className={`grid gap-4 ${fields.length === 4 ? 'sm:grid-cols-2' : ''}`}>
         {fields.map((f) => (
           <FloatingField

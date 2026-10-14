@@ -11,7 +11,7 @@ type Props = {
   fade?: boolean;
 };
 
-/** Infinite horizontal loop (pure CSS). Content is duplicated once; hover pauses it. */
+/** Infinite horizontal loop (pure CSS). Content is duplicated once (hidden and inert); hover pauses it. */
 export default function Marquee({ children, duration = 40, reverse = false, gap = 48, className = '', fade = true }: Props) {
   const style = { '--marquee-duration': `${duration}s`, '--marquee-gap': `${gap}px`, gap: `${gap}px` } as CSSProperties;
   return (
@@ -23,7 +23,7 @@ export default function Marquee({ children, duration = 40, reverse = false, gap 
         style={style}
       >
         <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }}>{children}</div>
-        <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }} aria-hidden>{children}</div>
+        <div className="flex shrink-0 items-center" style={{ gap: `${gap}px` }} aria-hidden inert>{children}</div>
       </div>
     </div>
   );

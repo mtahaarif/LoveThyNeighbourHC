@@ -18,12 +18,6 @@ const slides = [
 
 const credentials = ['Medicare-certified', 'Medicaid-licensed', 'AHCA-licensed'];
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 18 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
-});
-
 export default function HomeHero() {
   const [index, setIndex] = useState(0);
   const reduce = usePrefersReducedMotion();
@@ -47,16 +41,17 @@ export default function HomeHero() {
         {/* Copy */}
         <div className="max-w-xl">
 
-          <motion.h1 {...fadeUp(0.08)} className="mt-5 mb-0 font-display text-[2.6rem] leading-[1.02] font-bold tracking-tight text-brand-950 sm:text-6xl lg:text-[4.1rem]">
+          {/* Entrances are CSS animations: they start at first paint instead of after hydration (LCP). */}
+          <h1 className="mt-5 mb-0 animate-rise font-display [animation-delay:80ms] text-[2.6rem] leading-[1.02] font-bold tracking-tight text-brand-950 sm:text-6xl lg:text-[4.1rem]">
             Better Skills, Better Care,{' '}
             <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-teal-brand bg-clip-text text-transparent">Better Results</span>
-          </motion.h1>
+          </h1>
 
-          <motion.p {...fadeUp(0.16)} className="mt-5 mb-0 max-w-lg text-[17px] leading-relaxed text-slate-600">
+          <p className="mt-5 mb-0 max-w-lg animate-rise [animation-delay:160ms] text-[17px] leading-relaxed text-slate-600">
             Your health and comfort matter—contact us now to get started with personalized home care services.
-          </motion.p>
+          </p>
 
-          <motion.div {...fadeUp(0.24)} className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-8 flex animate-rise [animation-delay:240ms] flex-wrap items-center gap-3">
             <a href={phone.href} className="group inline-flex items-center gap-2.5 rounded-full bg-brand-600 py-3 pr-6 pl-3 text-[15px] font-bold text-white no-underline shadow-card transition-all hover:-translate-y-0.5 hover:bg-brand-700">
               <span className="grid size-8 place-items-center rounded-full bg-white/15 transition-transform group-hover:rotate-12"><Phone className="size-4" aria-hidden /></span>
               Call Us
@@ -65,25 +60,20 @@ export default function HomeHero() {
               The Services We Offer
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden />
             </a>
-          </motion.div>
+          </div>
 
-          <motion.ul {...fadeUp(0.32)} className="mt-9 mb-0 flex list-none flex-wrap gap-x-6 gap-y-3 p-0">
+          <ul className="mt-9 mb-0 flex animate-rise [animation-delay:320ms] list-none flex-wrap gap-x-6 gap-y-3 p-0">
             {credentials.map((c) => (
               <li key={c} className="flex items-center gap-2 text-[14px] font-semibold text-slate-700">
                 <BadgeCheck className="size-5 text-brand-500" aria-hidden />
                 {c}
               </li>
             ))}
-          </motion.ul>
+          </ul>
         </div>
 
         {/* Visual */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative lg:pl-4"
-        >
+        <div className="relative animate-settle lg:pl-4">
           <div className="relative mx-auto aspect-square w-full max-w-[34rem] overflow-hidden rounded-[2rem] bg-brand-100 shadow-card ring-1 ring-black/5">
             <AnimatePresence initial={false}>
               <motion.div
@@ -160,7 +150,7 @@ export default function HomeHero() {
           >
             <MapPin className="size-4 text-accent-500" aria-hidden /> {location}
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

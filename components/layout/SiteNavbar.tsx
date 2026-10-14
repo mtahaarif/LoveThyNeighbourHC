@@ -263,8 +263,8 @@ export default function SiteNavbar() {
           <Image
             src="/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc.png"
             alt="Love Thy Neighbor Home Health Care, Inc"
-            width={991}
-            height={328}
+            width={160}
+            height={53}
             loading="eager"
             className={`w-auto transition-[height] duration-300 ${scrolled ? 'h-11' : 'h-[3.25rem]'}`}
           />
