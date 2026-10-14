@@ -9,12 +9,11 @@ import { hours, location, phone } from '@/content/navigation';
 
 const AUTOPLAY_MS = 7000; // the original slideshow's autoplay delay
 
-// The original hero photos. Their left third carries baked-in text, so they are shown cropped to the right.
 const slides = [
-  { src: '/assets/images/______-5-dcd9cfb.jpg', alt: 'A nurse gently listening to a young girl’s heartbeat with a stethoscope' },
-  { src: '/assets/images/______-3-78858ae-35ab50cb.jpg', alt: 'A smiling caregiver with an elderly woman outdoors' },
-  { src: '/assets/images/______-4-01576d2-279b0d60.jpg', alt: 'A nurse in blue scrubs in a bright clinic room' },
-  { src: '/assets/images/______-2-a51d902-d8a3366f.jpg', alt: 'A therapist supporting a patient during in-home care' },
+  { src: '/home-banner-1.jpg', alt: 'A nurse in teal scrubs listening to a young girl’s heartbeat on a sofa at home' },
+  { src: '/home-banner-2.jpg', alt: 'A smiling nurse in bright blue scrubs standing in a sunlit room' },
+  { src: '/home-banner-3.jpg', alt: 'A caregiver holding the hands of an elderly woman in a wheelchair in a garden' },
+  { src: '/home-banner-4.jpg', alt: 'A caregiver helping an elderly man with a walking stick at home' },
 ];
 
 const credentials = ['Medicare-certified', 'Medicaid-licensed', 'AHCA-licensed'];
@@ -47,13 +46,6 @@ export default function HomeHero() {
       <div className="mx-auto grid max-w-[1320px] items-center gap-12 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:gap-14 lg:px-8 lg:pt-14 lg:pb-20">
         {/* Copy */}
         <div className="max-w-xl">
-          <motion.p {...fadeUp(0)} className="m-0 inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-[12px] font-bold tracking-wide text-brand-700 shadow-sm ring-1 ring-brand-100">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent-500/70" />
-              <span className="relative inline-flex size-2 rounded-full bg-accent-500" />
-            </span>
-            Love Thy Neighbor Home Health Care, Inc
-          </motion.p>
 
           <motion.h1 {...fadeUp(0.08)} className="mt-5 mb-0 font-display text-[2.6rem] leading-[1.02] font-bold tracking-tight text-brand-950 sm:text-6xl lg:text-[4.1rem]">
             Better Skills, Better Care,{' '}
@@ -103,9 +95,9 @@ export default function HomeHero() {
                 transition={{ duration: 1, ease: 'easeInOut' }}
               >
                 <motion.div
-                  className="absolute inset-0 origin-right"
-                  initial={{ scale: reduce ? 1.12 : 1.2 }}
-                  animate={{ scale: 1.12 }}
+                  className="absolute inset-0 origin-center"
+                  initial={{ scale: reduce ? 1 : 1.08 }}
+                  animate={{ scale: 1 }}
                   transition={{ duration: AUTOPLAY_MS / 1000 + 1, ease: 'linear' }}
                 >
                   <Image
@@ -114,8 +106,8 @@ export default function HomeHero() {
                     fill
                     loading="eager"
                     fetchPriority={index === 0 ? 'high' : 'auto'}
-                    sizes="(min-width: 1024px) 1100px, 200vw"
-                    className="object-cover object-right"
+                    sizes="(min-width: 1024px) 560px, 100vw"
+                    className="object-cover"
                   />
                 </motion.div>
               </motion.div>
@@ -123,7 +115,7 @@ export default function HomeHero() {
             <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-brand-950/45 via-transparent to-transparent" />
 
             {/* Slide progress */}
-            <div className="absolute right-5 bottom-5 flex gap-1.5" role="tablist" aria-label="Choose slide">
+            <div className="absolute top-5 left-5 flex gap-1.5 sm:top-auto sm:right-5 sm:bottom-5 sm:left-auto" role="tablist" aria-label="Choose slide">
               {slides.map((s, i) => (
                 <button
                   key={s.src}

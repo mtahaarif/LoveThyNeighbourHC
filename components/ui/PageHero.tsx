@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image, { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { ViewTransition, type ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
@@ -8,8 +8,13 @@ import Reveal from './Reveal';
 
 type Crumb = { label: string; href?: string };
 
+/** Art-directed banner background: a wide image for tablets/desktops and a portrait one for phones. */
+/** `focus` is the object-position (x y) that keeps the subject visible when the banner crops the photo. */
+export type HeroBackground = { desktop: string; mobile: string; focus?: { desktop?: string; mobile?: string } };
+
 type Props = {
   title: string;
+  background?: HeroBackground;
   eyebrow?: string;
   description?: ReactNode;
   crumbs?: Crumb[];
@@ -20,17 +25,35 @@ type Props = {
 };
 
 /** Deep-navy page header with drifting aurora light, breadcrumbs and an optional framed image. */
-export default function PageHero({ title, eyebrow, description, crumbs = [], image, imageTransitionName, children }: Props) {
+export default function PageHero({ title, background, eyebrow, description, crumbs = [], image, imageTransitionName, children }: Props) {
+  // <picture> with two sources: each size loads only its own file (next/image still optimizes both).
+  const bg = background && {
+    d: getImageProps({ alt: '', fill: true, quality: 80, src: background.desktop, sizes: '100vw' }).props,
+    m: getImageProps({ alt: '', fill: true, quality: 80, src: background.mobile, sizes: '100vw', loading: 'eager', fetchPriority: 'high' }).props,
+  };
+
   return (
-    <section className="relative isolate overflow-hidden bg-brand-950 text-white">
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+    <section className={`relative isolate flex items-center overflow-hidden bg-brand-950 text-white ${background ? 'min-h-[17rem] sm:min-h-[20rem] lg:min-h-[26rem] xl:min-h-[30rem]' : ''}`}>
+      {bg && (
+        <div aria-hidden className="absolute inset-0 -z-10">
+          <picture>
+            <source media="(min-width: 640px)" srcSet={bg.d.srcSet} sizes="100vw" />
+            <img {...bg.m} alt="" style={{ ['--fm' as string]: background.focus?.mobile ?? 'center', ['--fd' as string]: background.focus?.desktop ?? 'center' }} className="absolute inset-0 size-full object-cover [object-position:var(--fm)] sm:[object-position:var(--fd)]" />
+          </picture>
+          {/* Navy wash: keeps white text readable on any photo and any crop. */}
+          <div className="absolute inset-0 bg-brand-950/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-950/55 via-brand-950/5 to-brand-950/65" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(10_33_57/0.5),transparent_65%)]" />
+        </div>
+      )}
+      <div aria-hidden className={`pointer-events-none absolute inset-0 -z-10 ${bg ? 'opacity-25' : ''}`}>
         <div className="absolute -top-40 -left-32 size-[34rem] animate-[float_14s_ease-in-out_infinite] rounded-full bg-brand-500/40 blur-3xl" />
         <div className="absolute -right-24 -bottom-48 size-[30rem] animate-[float_18s_ease-in-out_infinite_reverse] rounded-full bg-teal-brand/25 blur-3xl" />
         <div className="absolute top-10 right-1/3 size-72 rounded-full bg-accent-500/15 blur-3xl" />
         <div className="absolute inset-0 bg-[linear-gradient(rgb(255_255_255/0.05)_1px,transparent_1px),linear-gradient(90deg,rgb(255_255_255/0.05)_1px,transparent_1px)] [background-size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
       </div>
 
-      <div className={`mx-auto grid max-w-[1320px] items-center gap-12 px-4 py-16 sm:px-6 lg:px-8 ${image ? 'lg:grid-cols-[1.15fr_1fr] lg:py-20' : 'lg:py-24'}`}>
+      <div className={`mx-auto grid w-full max-w-[1320px] items-center gap-12 px-4 py-16 sm:px-6 lg:px-8 ${image ? 'lg:grid-cols-[1.15fr_1fr] lg:py-20' : 'lg:py-24'}`}>
         <div className={image ? '' : 'mx-auto max-w-3xl text-center'}>
           {crumbs.length > 0 && (
             <Reveal y={12}>

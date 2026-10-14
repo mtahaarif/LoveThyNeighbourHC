@@ -15,7 +15,7 @@ export const metadata: Metadata = pageMetadata['/how-to-get-started'];
 export default function GetStartedPage() {
   return (
     <PageTransition>
-      <PageHero title={getStarted.title} description={getStarted.intro} crumbs={[{ label: 'How to Get Started' }]} />
+      <PageHero background={{ desktop: '/get-started-banner-desktop.png', mobile: '/get-started-banner-mobile.png', focus: { desktop: 'center 25%', mobile: 'center 40%' } }} title={getStarted.title} description={getStarted.intro} crumbs={[{ label: 'How to Get Started' }]} />
       <section className="relative isolate overflow-hidden bg-gradient-to-b from-brand-50/70 to-white py-20 lg:py-28">
         <div aria-hidden className="absolute top-20 -right-40 -z-10 size-[28rem] rounded-full bg-brand-200/40 blur-3xl" />
         <div className="mx-auto grid max-w-[1320px] gap-10 px-4 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:px-8">

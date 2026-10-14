@@ -28,7 +28,7 @@ export default function InsurancePage() {
   const half = Math.ceil(logos.length / 2);
   return (
     <PageTransition>
-      <PageHero title={insurance.title} crumbs={[{ label: insurance.title }]} />
+      <PageHero background={{ desktop: '/insurance-banner-desktop.png', mobile: '/insurance-banner-mobile.png', focus: { desktop: 'center 50%', mobile: 'center 70%' } }} title={insurance.title} crumbs={[{ label: insurance.title }]} />
 
       {/* Two marquee rows in opposite directions */}
       <section aria-label="Insurance partners" className="space-y-5 overflow-hidden bg-gradient-to-b from-brand-50/80 to-white py-14">
