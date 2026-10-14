@@ -641,6 +641,20 @@ Tuned against a SiteChecker technical audit (Oct 2026). What each finding led to
   - "Learn more" links carry screen-reader text naming their destination.
   - The footer links the three "Why Choose Us" pages, and each post links the next three posts, so no page is
     left with only a couple of internal links.
+- **Second audit pass:**
+  - **Footer logo:** the link's text is its image alt.
+  - **FAQ markup:** each FAQ question is a text-only `h2` with a full-row button over it, labelled by the heading.
+  - **Blog search titles:** every blog post's search title differs from its H1 (`postSeo`).
+  - **Hospice post:** the two repeated "Services May Include" subheadings are now distinct.
+  - **"Why Choose Us" pages (`content/highlights.ts`):** rewritten from GoDaddy template text, using facts the
+    agency publishes elsewhere on the site.
+  - **Two new sections built from the agency's own articles:**
+    - **Insurance Information:** "How coverage works"
+    - **How to Get Started:** "Starting care, step by step" and "Who may qualify"
+  - **Topic-matched articles:** service and "Why Choose Us" pages show three posts each (`readingFor` in
+    `content/blog.ts`, rendered by `components/blog/RelatedArticles.tsx`).
+  - **Post links:** posts show "Keep reading" (four more) under the article, so every page has 10+ internal links.
+  - **Icon links:** social and share links carry screen-reader text instead of `aria-label`.
 - **Forms** declare `method="post"` with a real `action`. With JavaScript off they still submit: the API
   routes accept form data and redirect back with `?form=sent|error`.
 - **Language:** `<html lang="en-US">` (the business is in Florida; the GoDaddy original said `en-PH`).
@@ -673,7 +687,16 @@ Every response carries:
   hydration. LCP elements are never faded: `settle` only moves.
   - Measured with devtools throttling, LCP went from 5.7 s to 2.7 s (home) and from 3.4 s to 2.6 s (About).
   - Scroll-triggered `Reveal` is still used below the fold.
+- **Inline CSS (`experimental.inlineCss`).** Styles ship inside the HTML instead of a render-blocking stylesheet.
+  - Measured with Lighthouse (mobile, devtools throttling), LCP went from 2.7 s to 2.1 s (home), 2.6 s to 1.8 s
+    (About) and 2.4 s to 1.8 s (How to Get Started).
+  - Trade-off: a larger HTML document, and no separately cached stylesheet for repeat visits.
 - **`next/image`** everywhere with `sizes` hints, AVIF then WebP (`images.formats`), 31-day optimizer cache.
+  `deviceSizes` stops at 1920 (no 2048/3840 variants). `components/ui/CoverImage.tsx` replaces `<Image fill>`: it
+  covers its parent the same way but keeps the intrinsic `width`/`height` attributes, as do the `PageHero` banner
+  `<picture>` sources.
+- **Banner photos** are served as about 100–170 KB JPEGs (`*-banner-*.jpg`, generated with sharp at quality 84 from
+  the 1.7–1.9 MB PNG originals). The PNGs are still in `public/` but unused.
   Article images inside blog HTML are rewritten by `RichText` into optimizer `srcset`s with their intrinsic
   width/height. The navbar and footer logos request about 160 px variants instead of 1,080/2,048 px preloads.
 - **Above-the-fold images** use `loading="eager"` and `fetchPriority="high"` for the main photo, instead of the
@@ -809,13 +832,15 @@ Any Node.js host that runs `next start`, or Vercel (zero configuration). Typical
   submissions are only logged.
 - **Placeholder content inherited from the original site** should be replaced by the business:
   - the FAQ page has been rewritten from facts elsewhere on the site (see §17); have the agency review it;
-  - Insurance Information and How to Get Started are short (about 100–170 words); a paragraph or two of real
-    copy would lift them above the "thin content" threshold;
-  - the three highlight pages' sections (Our Story, Our Community, Our Features, …) describe a generic
-    "platform" rather than the agency;
+  - the new Insurance Information and How to Get Started sections summarize the agency's own articles; have the
+    agency review them;
+  - the three highlight pages were rewritten from facts elsewhere on the site (see §17); have the agency review them;
   - the Instagram link is `https://www.instagram.com/page` (placeholder in the original).
 - **Map.** The original used GoDaddy's Google Maps widget (with a "Get directions" control). It's replaced by the
   key-less Google Maps embed at the same location and zoom.
+- **Audit console errors.** SiteChecker reports `net::ERR_FAILED` on every page. Those come from the crawler blocking
+  images and fonts while it renders: a normal browser logs no errors, and blocking media in Playwright reproduces
+  the audit's counts.
 - **TrustedSite badge.** The original's TrustedSite script loads only when the site URL is `lovethyneighborhhc.com`
   (the service validates the domain and answers 403 anywhere else).
 - **Removed from the original:** the "Powered by GoDaddy Airo" footer badge, GoDaddy's service worker

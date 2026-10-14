@@ -58,7 +58,7 @@ export const home: {
   "split": {
     "eyebrow": "In Love Thy Neighbor Home Health Care",
     "title": "Your health is our priority",
-    "body": "<p>Your well-being comes first in everything we do. We are committed to providing compassionate, personalized care plans that include skilled nursing care, supporting your health, comfort, and peace of mind every step of the way.</p>",
+    "body": "<p>Your well-being comes first in everything we do. We are committed to providing <strong>compassionate, personalized care plans</strong> that include skilled nursing care, supporting your health, comfort, and peace of mind every step of the way.</p>",
     "image": {
       "src": "/assets/images/Untitled-design-14-606c675e.jpg",
       "width": 1920,

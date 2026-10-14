@@ -37,8 +37,9 @@ export default function SiteFooter() {
 
       <div className="mx-auto grid max-w-[1320px] gap-12 px-4 py-16 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr] lg:px-8">
         <div>
-          <Link href="/" aria-label={`${site.name} — Home`} className="inline-block">
-            <Image src="/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png" alt="" width={172} height={56} className="h-14 w-auto" />
+          {/* The image alt is the link text (worded differently from the navbar logo's alt). */}
+          <Link href="/" className="inline-block">
+            <Image src="/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png" alt="Love Thy Neighbor home health care home page" width={172} height={56} className="h-14 w-auto" />
           </Link>
           <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-brand-100/75">{home.contact.intro}</p>
           <div className="mt-7">
@@ -48,8 +49,9 @@ export default function SiteFooter() {
                 const Icon = socialIcon(s.label);
                 return (
                   <li key={s.href}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="grid size-11 place-items-center rounded-full bg-white/[0.07] ring-1 ring-white/15 transition-all hover:-translate-y-1 hover:bg-accent-500 hover:text-brand-950">
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="grid size-11 place-items-center rounded-full bg-white/[0.07] ring-1 ring-white/15 transition-all hover:-translate-y-1 hover:bg-accent-500 hover:text-brand-950">
                       <Icon className="size-5" />
+                      <span className="sr-only">{s.label}</span>
                     </a>
                   </li>
                 );

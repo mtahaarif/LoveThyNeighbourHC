@@ -17,7 +17,7 @@ export const metadata: Metadata = pageMetadata['/about'];
 export default function AboutPage() {
   return (
     <PageTransition>
-      <PageHero background={{ desktop: '/about-banner-desktop.png', mobile: '/about-banner-mobile.png', focus: { desktop: 'center 60%', mobile: 'center 65%' } }} title={about.title} eyebrow={site.name} description={about.headline} crumbs={[{ label: 'About' }]} />
+      <PageHero background={{ desktop: '/about-banner-desktop.jpg', mobile: '/about-banner-mobile.jpg', focus: { desktop: 'center 60%', mobile: 'center 65%' } }} title={about.title} eyebrow={site.name} description={about.headline} crumbs={[{ label: 'About' }]} />
 
       {/* Sticky collage beside the scrolling story */}
       <section className="bg-white py-20 lg:py-28">

@@ -1,19 +1,19 @@
 'use client';
 
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 import { ArrowRight, BadgeCheck, Clock3, MapPin, Phone } from 'lucide-react';
 import { hours, location, phone } from '@/content/navigation';
+import CoverImage from '@/components/ui/CoverImage';
 
 const AUTOPLAY_MS = 7000; // the original slideshow's autoplay delay
 
 const slides = [
-  { src: '/home-banner-1.jpg', alt: 'A nurse in teal scrubs listening to a young girl’s heartbeat on a sofa at home' },
-  { src: '/home-banner-2.jpg', alt: 'A smiling nurse in bright blue scrubs standing in a sunlit room' },
-  { src: '/home-banner-3.jpg', alt: 'A caregiver holding the hands of an elderly woman in a wheelchair in a garden' },
-  { src: '/home-banner-4.jpg', alt: 'A caregiver helping an elderly man with a walking stick at home' },
+  { src: '/home-banner-1.jpg', width: 2048, height: 1366, alt: 'A nurse in teal scrubs listening to a young girl’s heartbeat on a sofa at home' },
+  { src: '/home-banner-2.jpg', width: 1024, height: 1024, alt: 'A smiling nurse in bright blue scrubs standing in a sunlit room' },
+  { src: '/home-banner-3.jpg', width: 1024, height: 1024, alt: 'A caregiver holding the hands of an elderly woman in a wheelchair in a garden' },
+  { src: '/home-banner-4.jpg', width: 2048, height: 1366, alt: 'A caregiver helping an elderly man with a walking stick at home' },
 ];
 
 const credentials = ['Medicare-certified', 'Medicaid-licensed', 'AHCA-licensed'];
@@ -90,14 +90,11 @@ export default function HomeHero() {
                   animate={{ scale: 1 }}
                   transition={{ duration: AUTOPLAY_MS / 1000 + 1, ease: 'linear' }}
                 >
-                  <Image
-                    src={slides[index].src}
-                    alt={slides[index].alt}
-                    fill
+                  <CoverImage
+                    image={slides[index]}
                     loading="eager"
                     fetchPriority={index === 0 ? 'high' : 'auto'}
                     sizes="(min-width: 1024px) 560px, 100vw"
-                    className="object-cover"
                   />
                 </motion.div>
               </motion.div>

@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
@@ -9,6 +8,7 @@ import RichText from '@/components/ui/RichText';
 import Reveal from '@/components/ui/Reveal';
 import { Eyebrow } from '@/components/ui/SectionHeading';
 import { home } from '@/content/home';
+import CoverImage from '@/components/ui/CoverImage';
 
 /** "Your health is our priority": parallax photo, spinning dashed ring and a floating glass badge. */
 export default function PrioritySplit() {
@@ -27,7 +27,7 @@ export default function PrioritySplit() {
           <div aria-hidden className="absolute -right-6 -bottom-8 size-40 rounded-[2rem] bg-accent-300/30 blur-2xl" />
           <div className="relative aspect-[4/3.4] overflow-hidden rounded-[2.25rem] shadow-card">
             <motion.div style={{ y: imgY }} className="absolute -inset-y-[10%] inset-x-0">
-              <Image src={image.src} alt={image.alt} fill sizes="(min-width: 1024px) 620px, 100vw" className="object-cover" />
+              <CoverImage image={image} sizes="(min-width: 1024px) 620px, 100vw" />
             </motion.div>
           </div>
           <motion.div style={{ y: badgeY }} className="absolute -right-3 bottom-10 rounded-3xl p-5 shadow-card glass sm:-right-8">

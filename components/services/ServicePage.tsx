@@ -9,6 +9,8 @@ import Button from '@/components/ui/Button';
 import { Eyebrow } from '@/components/ui/SectionHeading';
 import HoursList from '@/components/contact/HoursList';
 import ServiceCard from './ServiceCard';
+import RelatedArticles from '@/components/blog/RelatedArticles';
+import { readingFor } from '@/content/blog';
 import { services } from '@/content/services';
 import { site } from '@/content/site';
 import { home } from '@/content/home';
@@ -95,6 +97,8 @@ export default function ServicePage({ service }: { service: Service }) {
           </div>
         </div>
       </section>
+
+      <RelatedArticles slugs={readingFor[service.slug] ?? []} className="border-t border-brand-100 bg-white" />
 
       {/* Related services */}
       <section aria-labelledby="more-services" className="overflow-hidden bg-gradient-to-b from-brand-50/70 to-white py-20">

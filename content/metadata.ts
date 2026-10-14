@@ -80,12 +80,14 @@ const pages: Record<string, Entry> = {
   '/404': { title: 'Page Not Found', noindex: true },
 };
 
-/** Search titles and snippets for posts whose on-page title or excerpt doesn't fit a result listing. */
+/** Search titles (worded differently from each post's on-page H1, under 60 characters) and snippets. */
 const postSeo: Record<string, { title?: string; description: string }> = {
   'healthcare-professionals-at-home': {
+    title: 'Professional Healthcare at Home: How It Works',
     description: 'How home health care brings skilled nursing, therapy and professional support into the comfort of home, and who may benefit from care at home.',
   },
   'embracing-compassionate-home-healthcare': {
+    title: 'Compassionate Home Healthcare: Healing at Home',
     description: 'Recovering from surgery or managing a chronic condition at home: why compassionate home healthcare puts comfort, dignity and individual attention first.',
   },
   'the-5-essentials-every-family-should-consider-for-aging-at-home': {
@@ -97,15 +99,19 @@ const postSeo: Record<string, { title?: string; description: string }> = {
     description: 'What ACHC Accreditation means for families, and how Love Thy Neighbor Home Health Care upholds its standards of safety, quality and compassionate care.',
   },
   'inclusive-home-health-care-for-florida-families': {
+    title: 'Inclusive, Compassionate Home Care for Florida Families',
     description: 'Medicare-certified, Medicaid-licensed home health care for Florida families, delivered with compassion, dignity and respect for every patient.',
   },
   '7-signs-my-parent-needs-home-care': {
+    title: '7 Signs Your Aging Parent Needs Home Care',
     description: 'The early signs are often subtle. Seven signs that an aging parent may need home care, and how recognizing them early helps them stay safe at home.',
   },
   'is-home-health-care-covered-by-insurance': {
+    title: 'Does Insurance Cover Home Health Care? A Family Guide',
     description: 'Will insurance cover home health care? Often yes. How coverage depends on your plan, medical necessity and the specific services your loved one needs.',
   },
   'signs-your-loved-one-may-need-home-health-care': {
+    title: 'When Does a Loved One Need Home Health Care?',
     description: "Small changes are easy to dismiss as normal aging. The signs that a loved one may benefit from skilled home health care, and when it's time to act.",
   },
   'patient-education-understanding-hospice-vs-home-health-care': {
@@ -113,12 +119,15 @@ const postSeo: Record<string, { title?: string; description: string }> = {
     description: 'Hospice and home health care both happen at home but serve very different purposes. A clear guide to their goals, time frames, treatment and costs.',
   },
   'building-trust-in-home-health-care-a-guide-for-families': {
+    title: 'How to Choose a Home Health Provider You Can Trust',
     description: 'Inviting a caregiver into your home takes confidence. What families should know about choosing a home health provider they can trust with their care.',
   },
   'what-does-a-skilled-nurse-do-in-home-health-care': {
+    title: 'Skilled Nursing at Home: What a Home Health Nurse Does',
     description: 'After an illness, surgery or hospital stay, skilled nurses help patients heal, manage chronic conditions and stay healthy in the comfort of home.',
   },
   'what-is-home-health-care-and-who-qualifies-for-it': {
+    title: 'Home Health Care Explained: Services and Eligibility',
     description: 'What home health care includes, from skilled nursing to rehabilitation, and who qualifies for professional medical care in the comfort of home.',
   },
 };

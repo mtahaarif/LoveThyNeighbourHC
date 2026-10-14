@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, CalendarDays, Clock3 } from 'lucide-react';
@@ -7,11 +6,13 @@ import PageHero from '@/components/ui/PageHero';
 import PageTransition from '@/components/ui/PageTransition';
 import RichText from '@/components/ui/RichText';
 import { FacebookIcon, XIcon } from '@/components/ui/BrandIcons';
+import RelatedArticles from '@/components/blog/RelatedArticles';
 import { blog, getPost, posts } from '@/content/blog';
 import { pageMetadata, SITE_NAME } from '@/content/metadata';
 import JsonLd from '@/components/seo/JsonLd';
 import { formatDate } from '@/lib/dates';
 import { absoluteUrl } from '@/lib/site-url';
+import CoverImage from '@/components/ui/CoverImage';
 
 // Every post is prerendered via generateStaticParams; navigation may block on the (static) payload.
 export const instant = false;
@@ -34,7 +35,11 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
   const newer = posts[index - 1];
   const older = posts[index + 1];
   // The next three posts (wrapping around), so every article is linked from several others, not just the newest.
-  const related = [1, 2, 3].map((n) => posts[(index + n) % posts.length]).filter((p) => p.slug !== post.slug);
+  // The next posts (wrapping around): three in the sidebar, four more below, so every article is linked from
+  // seven others rather than only the newest few.
+  const after = (n: number) => posts[(index + n) % posts.length];
+  const related = [1, 2, 3].map(after);
+  const keepReading = [4, 5, 6, 7].map(after);
   const url = absoluteUrl(`/blogs/f/${post.slug}`);
   const share = [
     { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, Icon: FacebookIcon },
@@ -93,7 +98,7 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
                   <li key={p.slug}>
                     <Link href={`/blogs/f/${p.slug}`} className="group flex gap-4">
                       <span className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-brand-100">
-                        <Image src={p.image.src} alt={p.image.alt} fill sizes="64px" className="object-cover transition-transform duration-500 group-hover:scale-110" />
+                        <CoverImage image={p.image} sizes="64px" className="transition-transform duration-500 group-hover:scale-110" />
                       </span>
                       <span>
                         <span className="line-clamp-2 text-[14px] font-bold text-brand-950 transition-colors group-hover:text-brand-600">{p.title}</span>
@@ -109,8 +114,9 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
               <ul className="mt-4 flex gap-3">
                 {share.map(({ label, href, Icon }) => (
                   <li key={label}>
-                    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={`Share on ${label}`} className="grid size-11 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 transition-all hover:-translate-y-1 hover:bg-accent-500 hover:text-brand-950">
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="grid size-11 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 transition-all hover:-translate-y-1 hover:bg-accent-500 hover:text-brand-950">
                       <Icon className="size-5" />
+                      <span className="sr-only">Share on {label}</span>
                     </a>
                   </li>
                 ))}
@@ -119,6 +125,8 @@ export default async function BlogPostPage({ params }: PageProps<'/blogs/f/[slug
           </aside>
         </div>
       </section>
+
+      <RelatedArticles slugs={keepReading.map((p) => p.slug)} title="Keep Reading" eyebrow="More From Our Blog" className="border-t border-brand-100 bg-white" />
 
       <nav aria-label="More posts" className="border-t border-brand-100 bg-gradient-to-b from-brand-50/50 to-white">
         <div className="mx-auto grid max-w-[1320px] gap-5 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:px-8">

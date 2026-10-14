@@ -1,4 +1,6 @@
-// Generated from the original site content. Edit freely; wording and images match the original.
+// The original pages still carried GoDaddy template text ("…a platform…real-time chat", "from web development to
+// digital marketing", "high-quality electronics to stylish fashion accessories"). The sections below are rewritten
+// using only facts the agency publishes elsewhere on this site (About, services, home cards and its own articles).
 import type { Highlight } from './types';
 
 export const highlights: Highlight[] = [
@@ -7,16 +9,16 @@ export const highlights: Highlight[] = [
     "title": "Individualized Care Plans",
     "sections": [
       {
-        "heading": "Our Story",
-        "body": "<p>We started lovethyneighborhhc.com with a simple goal in mind: to create a platform that makes it easy for people to connect with others who share their interests and passions. Our journey has been a long and winding one, but we're proud of what we've accomplished so far.</p>"
+        "heading": "Built Around the Patient",
+        "body": "<p>Every care plan we provide is thoughtfully designed around the <strong>patient’s medical needs, physician’s recommendations and personal goals</strong> for recovery and well-being. We believe healing happens best at home, surrounded by dignity, respect and compassionate support.</p>"
       },
       {
-        "heading": "Our Community",
-        "body": "<p>At lovethyneighborhhc.com, we believe that building a strong and supportive community is key to our success. That's why we've created a platform that puts people first, and fosters a sense of belonging and connection among our users.</p>"
+        "heading": "Guided by Skilled Nursing",
+        "body": "<p>Our licensed nurses deliver physician-directed care and work closely with physicians, therapists and other healthcare professionals, so each plan stays tailored to the patient. Care can include monitoring vital signs, managing medications, wound care, managing chronic conditions such as diabetes or heart disease, and educating patients and families.</p>"
       },
       {
-        "heading": "Our Features",
-        "body": "<p>We've built a platform that's packed with features designed to make your experience on lovethyneighborhhc.com as enjoyable and engaging as possible. From personalized recommendations to real-time chat, we've got you covered.</p>"
+        "heading": "Adjusted as Recovery Progresses",
+        "body": "<p>Nurses carry out a professional assessment at each visit, which lets them identify concerns early and work with the patient’s physician when the care plan needs to change, from the initial consultation to full recovery or long-term support.</p>"
       }
     ]
   },
@@ -25,16 +27,16 @@ export const highlights: Highlight[] = [
     "title": "Reduced Hospital Re-Admissions",
     "sections": [
       {
-        "heading": "Our Vision",
-        "body": "<p>We are on a mission to revolutionize the way people live, work, and play by enhancing access to essential health services. Our vision is to create a world where everyone can benefit from innovative home health care products and services, ultimately reducing hospital re-admissions and improving quality of life.</p>"
+        "heading": "Close Monitoring at Home",
+        "body": "<p>Our skilled clinical team provides personalized care plans and <strong>closely monitors each patient</strong> to prevent complications and reduce unnecessary hospital visits, helping patients heal safely at home.</p>"
       },
       {
-        "heading": "Our Services",
-        "body": "<p>We offer a wide range of services, including essential health services, that are designed to meet the needs of our customers. From web development to digital marketing, we have the expertise to help your business succeed in areas such as home health care and reducing hospital re-admissions.</p>"
+        "heading": "Support After a Hospital Stay",
+        "body": "<p>After surgery, hospitalization or illness, patients often need close monitoring to support healing. Skilled nurses provide wound care, medication management and assessments at each visit, and communicate with the physician as soon as adjustments are needed.</p>"
       },
       {
-        "heading": "Our Team",
-        "body": "<p>Our team is made up of experienced professionals dedicated to providing exceptional health services. We work closely with our clients to understand their needs and offer tailored home health care solutions that exceed their expectations, ultimately helping to reduce hospital re-admissions.</p>"
+        "heading": "Education That Prevents Setbacks",
+        "body": "<p>Beyond clinical care, our nurses teach patients and families about medications, lifestyle changes and disease management. That confidence helps patients manage their health, maintain their independence and avoid going back to the hospital.</p>"
       }
     ]
   },
@@ -43,16 +45,16 @@ export const highlights: Highlight[] = [
     "title": "Patient Experience and Communication",
     "sections": [
       {
-        "heading": "Our Story",
-        "body": "<p>At lovethyneighborhhc.com, we started with the goal of providing the best products and services to our customers. With over 10 years of experience in the industry, we have established ourselves as a trusted brand that delivers quality every time.</p>"
+        "heading": "Clear, Compassionate Communication",
+        "body": "<p>Clear, compassionate communication with patients, families and healthcare providers builds trust and a supportive care experience. We keep <strong>families informed every step of the way</strong>.</p>"
       },
       {
-        "heading": "Our Team",
-        "body": "<p>Our team is made up of experienced professionals who are dedicated to providing exceptional service. We work closely with our clients to understand their needs and provide tailored solutions that exceed their expectations.</p>"
+        "heading": "Partnership With Families and Physicians",
+        "body": "<p>Our mission is to deliver compassionate, high-quality care through licensed healthcare professionals, personalized care plans and meaningful partnerships with patients, families and physicians, so every person receives the respect, safety and support they deserve.</p>"
       },
       {
-        "heading": "Our Products",
-        "body": "<p>We offer a wide range of products that are designed to meet the needs of our customers. From high-quality electronics to stylish fashion accessories, we have something for everyone.</p>"
+        "heading": "Every Patient Treated Like Family",
+        "body": "<p>We treat every patient like family and every home like our own, and we deliver services without discrimination based on race, religion, age, gender, disability, ethnicity, cultural background or national origin.</p>"
       }
     ]
   }

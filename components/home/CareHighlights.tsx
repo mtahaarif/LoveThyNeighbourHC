@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, ViewTransition } from 'react';
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 import { ArrowUpRight, ClipboardList, HeartPulse, MessagesSquare } from 'lucide-react';
 import { careHighlights, type CareHighlight } from '@/content/home';
+import CoverImage from '@/components/ui/CoverImage';
 
 const icons = [ClipboardList, HeartPulse, MessagesSquare];
 
@@ -40,12 +40,10 @@ function StackCard({ card, index, total, progress }: CardProps) {
         <div className="relative h-52 shrink-0 overflow-hidden sm:h-56 lg:h-auto lg:w-[44%]">
           <ViewTransition name={`highlight-${card.href.slice(1)}`} share="morph" default="none">
             <div className="absolute inset-0">
-            <Image
-              src={card.image.src}
-              alt={card.image.alt}
-              fill
+            <CoverImage
+              image={card.image}
               sizes="(min-width: 1024px) 360px, 100vw"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="transition-transform duration-700 ease-out group-hover:scale-105"
             />
             </div>
           </ViewTransition>

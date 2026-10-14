@@ -81,3 +81,28 @@ export const insurance: {
     }
   }
 };
+
+// Drawn from the agency's article "Is Home Health Care Covered by Insurance?".
+export const coverage = {
+  eyebrow: 'How Coverage Works',
+  title: 'Is Home Health Care Covered by Insurance?',
+  intro: 'Often, yes. Coverage depends on the type of insurance plan, medical necessity and the specific services required. Insurance providers usually cover medically necessary home health care that a physician prescribes to help patients recover, manage chronic conditions or avoid going back to the hospital.',
+  coveredTitle: 'Commonly covered services',
+  covered: [
+    'Skilled nursing care (wound care, injections, health monitoring)',
+    'Physical, occupational and speech therapy',
+    'Medication management and education',
+    'Post-hospitalization recovery care',
+    'Intermittent home health aide support (depending on eligibility)',
+  ],
+  coveredNote: 'Non-medical or custodial care, such as full-time personal caregiving or companionship, may not always be fully covered, depending on the plan.',
+  factorsTitle: 'What determines coverage',
+  factors: [
+    { title: 'Physician certification', body: 'A doctor must confirm that home health care is medically necessary.' },
+    { title: 'A care plan', body: 'A structured care plan must be created and followed by licensed health professionals.' },
+    { title: 'Level of care needed', body: 'Coverage is generally for skilled, intermittent care rather than full-time assistance.' },
+    { title: 'Your plan’s guidelines', body: 'Each insurer has its own eligibility rules, limitations and authorization requirements.' },
+  ],
+  help: 'Our team assists families in verifying eligibility, coordinating with insurance providers and guiding them through the approval process. We also accept Sunshine Health, and self-pay options are available.',
+  article: { label: 'Read the full guide: Is home health care covered by insurance?', href: '/blogs/f/is-home-health-care-covered-by-insurance' },
+};

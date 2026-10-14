@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import PageHero from '@/components/ui/PageHero';
 import PageTransition from '@/components/ui/PageTransition';
 import Marquee from '@/components/ui/Marquee';
@@ -8,10 +9,11 @@ import GlowCard from '@/components/ui/GlowCard';
 import Reveal from '@/components/ui/Reveal';
 import RichText from '@/components/ui/RichText';
 import Button from '@/components/ui/Button';
-import { Eyebrow } from '@/components/ui/SectionHeading';
-import { insurance } from '@/content/insurance';
+import SectionHeading, { Eyebrow } from '@/components/ui/SectionHeading';
+import { coverage, insurance } from '@/content/insurance';
 import { pageMetadata } from '@/content/metadata';
 import type { Img } from '@/content/types';
+import CoverImage from '@/components/ui/CoverImage';
 
 export const metadata: Metadata = pageMetadata['/insurance-information'];
 
@@ -29,7 +31,7 @@ export default function InsurancePage() {
   const half = Math.ceil(logos.length / 2);
   return (
     <PageTransition>
-      <PageHero background={{ desktop: '/insurance-banner-desktop.png', mobile: '/insurance-banner-mobile.png', focus: { desktop: 'center 50%', mobile: 'center 70%' } }} title={insurance.title} crumbs={[{ label: insurance.title }]} />
+      <PageHero background={{ desktop: '/insurance-banner-desktop.jpg', mobile: '/insurance-banner-mobile.jpg', focus: { desktop: 'center 50%', mobile: 'center 70%' } }} title={insurance.title} crumbs={[{ label: insurance.title }]} />
 
       {/* Two marquee rows in opposite directions */}
       <section aria-hidden className="space-y-5 overflow-hidden bg-gradient-to-b from-brand-50/80 to-white py-14">
@@ -58,12 +60,52 @@ export default function InsurancePage() {
         </ul>
       </section>
 
+      {/* How coverage works */}
+      <section aria-labelledby="coverage-title" className="bg-gradient-to-b from-white to-brand-50/60 pb-20 lg:pb-28">
+        <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
+          <SectionHeading id="coverage-title" eyebrow={coverage.eyebrow} title={coverage.title} description={coverage.intro} align="center" />
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            <Reveal className="relative isolate overflow-hidden rounded-[2rem] bg-brand-950 p-8 text-white sm:p-10">
+              <div aria-hidden className="absolute -top-24 -right-24 -z-10 size-72 rounded-full bg-brand-500/40 blur-3xl" />
+              <h3 className="font-display text-3xl font-bold">{coverage.coveredTitle}</h3>
+              <ul className="mt-6 space-y-3.5">
+                {coverage.covered.map((c) => (
+                  <li key={c} className="flex gap-3 text-[16px] leading-relaxed text-brand-50">
+                    <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-accent-400" aria-hidden />
+                    {c}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-7 border-t border-white/10 pt-5 text-[14px] leading-relaxed text-brand-100/75">{coverage.coveredNote}</p>
+            </Reveal>
+            <Reveal delay={0.1} className="rounded-[2rem] bg-white p-8 shadow-soft ring-1 ring-slate-900/5 sm:p-10">
+              <h3 className="font-display text-3xl font-bold text-brand-950">{coverage.factorsTitle}</h3>
+              <ol className="mt-6 space-y-5">
+                {coverage.factors.map((f, i) => (
+                  <li key={f.title} className="flex gap-4">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-50 font-display text-lg font-bold text-brand-600 ring-1 ring-brand-100">{i + 1}</span>
+                    <p className="text-[16px] leading-relaxed text-slate-600"><strong className="text-brand-950">{f.title}.</strong> {f.body}</p>
+                  </li>
+                ))}
+              </ol>
+            </Reveal>
+          </div>
+          <Reveal delay={0.15} className="mt-6 flex flex-col items-start justify-between gap-5 rounded-[1.75rem] p-7 shadow-card glass sm:p-8 md:flex-row md:items-center">
+            <p className="max-w-3xl text-[16px] leading-relaxed text-slate-700">{coverage.help}</p>
+            <Link href={coverage.article.href} className="group inline-flex shrink-0 items-center gap-2 text-[15px] font-bold text-brand-600 hover:text-brand-800">
+              {coverage.article.label}
+              <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
       {/* "We're here for you" */}
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-50 py-20 lg:py-28">
         <div className="mx-auto grid max-w-[1320px] items-center gap-14 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
           <Reveal y={40} className="relative">
             <div className="relative aspect-[4/3] -rotate-2 overflow-hidden rounded-[2.25rem] shadow-card transition-transform duration-700 hover:rotate-0">
-              <Image src={cta.image.src} alt={cta.image.alt} fill sizes="(min-width: 1024px) 620px, 100vw" className="object-cover" />
+              <CoverImage image={cta.image} sizes="(min-width: 1024px) 620px, 100vw" />
             </div>
             <div aria-hidden className="absolute -bottom-8 -left-8 -z-10 size-48 rounded-full bg-teal-brand/30 blur-3xl" />
           </Reveal>

@@ -1,4 +1,4 @@
-import Image, { getImageProps } from 'next/image';
+import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { ViewTransition, type ReactNode } from 'react';
 import { ChevronRight } from 'lucide-react';
@@ -6,6 +6,7 @@ import type { Img } from '@/content/types';
 import { absoluteUrl } from '@/lib/site-url';
 import { Eyebrow } from './SectionHeading';
 import JsonLd from '@/components/seo/JsonLd';
+import CoverImage from '@/components/ui/CoverImage';
 
 type Crumb = { label: string; href?: string };
 
@@ -28,9 +29,11 @@ type Props = {
 /** Deep-navy page header with drifting aurora light, breadcrumbs and an optional framed image. */
 export default function PageHero({ title, background, eyebrow, description, crumbs = [], image, imageTransitionName, children }: Props) {
   // <picture> with two sources: each size loads only its own file (next/image still optimizes both).
+  // Banner art is made at 1916×821 (desktop) and 1122×1402 (phones); the real attributes give crawlers and
+  // the browser true dimensions, while CSS still covers the banner at any size.
   const bg = background && {
-    d: getImageProps({ alt: '', fill: true, quality: 80, src: background.desktop, sizes: '100vw' }).props,
-    m: getImageProps({ alt: '', fill: true, quality: 80, src: background.mobile, sizes: '100vw', loading: 'eager', fetchPriority: 'high' }).props,
+    d: getImageProps({ alt: '', width: 1916, height: 821, src: background.desktop, sizes: '100vw' }).props,
+    m: getImageProps({ alt: '', width: 1122, height: 1402, src: background.mobile, sizes: '100vw', loading: 'eager', fetchPriority: 'high' }).props,
   };
 
   return (
@@ -38,7 +41,7 @@ export default function PageHero({ title, background, eyebrow, description, crum
       {bg && (
         <div aria-hidden className="absolute inset-0 -z-10">
           <picture>
-            <source media="(min-width: 640px)" srcSet={bg.d.srcSet} sizes="100vw" />
+            <source media="(min-width: 640px)" srcSet={bg.d.srcSet} sizes="100vw" width={bg.d.width} height={bg.d.height} />
             <img {...bg.m} alt="" style={{ ['--fm' as string]: background.focus?.mobile ?? 'center', ['--fd' as string]: background.focus?.desktop ?? 'center' }} className="absolute inset-0 size-full object-cover [object-position:var(--fm)] sm:[object-position:var(--fd)]" />
           </picture>
           {/* Navy wash: keeps white text readable on any photo and any crop. */}
@@ -100,7 +103,7 @@ export default function PageHero({ title, background, eyebrow, description, crum
             <div className="rotate-[1.5deg] rounded-[2rem] p-2 glass-dark transition-transform duration-700 hover:rotate-0">
               <ViewTransition name={imageTransitionName} share={imageTransitionName ? 'morph' : undefined} default="none">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-[1.6rem]">
-                  <Image src={image.src} alt={image.alt} fill loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 560px, 100vw" className="object-cover" />
+                  <CoverImage image={image} loading="eager" fetchPriority="high" sizes="(min-width: 1024px) 560px, 100vw" />
                 </div>
               </ViewTransition>
             </div>

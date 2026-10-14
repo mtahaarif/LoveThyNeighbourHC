@@ -1,8 +1,8 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { ViewTransition } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import type { Service } from '@/content/types';
+import CoverImage from '@/components/ui/CoverImage';
 
 type Props = { service: Service; index: number; className?: string };
 
@@ -18,12 +18,10 @@ export default function ServiceCard({ service, index, className = '' }: Props) {
     >
       <ViewTransition name={`service-${service.slug}`} share="morph" default="none">
         <div className="absolute inset-0 -z-10">
-          <Image
-            src={service.image.src}
-            alt={service.image.alt}
-            fill
+          <CoverImage
+            image={service.image}
             sizes="(min-width: 1024px) 420px, 85vw"
-            className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+            className="transition-transform duration-[1.2s] ease-out group-hover:scale-110"
           />
         </div>
       </ViewTransition>

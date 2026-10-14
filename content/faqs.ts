@@ -23,7 +23,7 @@ export const faqs: { title: string; items: { question: string; answer: Rich }[] 
     },
     {
       "question": "Is home health care covered by insurance?",
-      "answer": "<p>Often, yes. Coverage depends on your insurance plan, medical necessity and the services required. We are Medicare-certified and Medicaid-licensed, and our partnered insurances include Anthem Blue Cross, Cigna, Humana, UnitedHealthcare, CareCentrix and Northwell Health. See our <a href=\"/insurance-information\">insurance information</a> or call us to check your coverage.</p>"
+      "answer": "<p>Often, yes. Coverage depends on your insurance plan, medical necessity and the services required. We are Medicare-certified and Medicaid-licensed, and we also accept Anthem Blue Cross Blue Shield, CareCentrix, Cigna, Humana, Northwell, Palmetto GBA, Sunshine Health and UnitedHealthcare. Self-pay options are available, and our team helps families verify eligibility. See our <a href=\"/insurance-information\">insurance information</a> or call us to check your coverage.</p>"
     },
     {
       "question": "How do I get started?",

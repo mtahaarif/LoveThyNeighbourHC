@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import PageHero from '@/components/ui/PageHero';
@@ -6,8 +5,11 @@ import PageTransition from '@/components/ui/PageTransition';
 import GlowCard from '@/components/ui/GlowCard';
 import Reveal from '@/components/ui/Reveal';
 import HighlightTimeline from './HighlightTimeline';
+import RelatedArticles from '@/components/blog/RelatedArticles';
+import { readingFor } from '@/content/blog';
 import { careHighlights } from '@/content/home';
 import type { Highlight } from '@/content/types';
+import CoverImage from '@/components/ui/CoverImage';
 
 /** Detail page for one of the home "Better Skills - Better Care - Better Results" cards. */
 export default function HighlightPage({ highlight }: { highlight: Highlight }) {
@@ -31,6 +33,8 @@ export default function HighlightPage({ highlight }: { highlight: Highlight }) {
         </div>
       </section>
 
+      <RelatedArticles slugs={readingFor[highlight.slug] ?? []} className="bg-white" />
+
       <section aria-labelledby="related-highlights" className="bg-white pb-24">
         <div className="mx-auto max-w-[1320px] px-4 sm:px-6 lg:px-8">
           <Reveal>
@@ -42,7 +46,7 @@ export default function HighlightPage({ highlight }: { highlight: Highlight }) {
                 <GlowCard className="h-full">
                   <Link href={c.href} className="group grid h-full sm:grid-cols-[42%_1fr]">
                     <div className="relative h-56 overflow-hidden sm:h-full">
-                      <Image src={c.image.src} alt={c.image.alt} fill sizes="(min-width: 768px) 260px, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                      <CoverImage image={c.image} sizes="(min-width: 768px) 260px, 100vw" className="transition-transform duration-700 group-hover:scale-110" />
                     </div>
                     <div className="flex flex-col p-7">
                       <h3 className="font-display text-2xl font-bold text-brand-950">{c.title}</h3>

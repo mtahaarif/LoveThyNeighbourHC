@@ -27,7 +27,7 @@ export default function FaqsPage() {
           })),
         }}
       />
-      <PageHero background={{ desktop: '/faqs-banner-desktop.png', mobile: '/faqs-banner-mobile.png', focus: { desktop: 'center 25%', mobile: 'center 48%' } }} title={faqs.title} crumbs={[{ label: 'FAQs' }]} />
+      <PageHero background={{ desktop: '/faqs-banner-desktop.jpg', mobile: '/faqs-banner-mobile.jpg', focus: { desktop: 'center 25%', mobile: 'center 48%' } }} title={faqs.title} crumbs={[{ label: 'FAQs' }]} />
       <section className="bg-gradient-to-b from-brand-50/60 to-white py-20 lg:py-28">
         <div className="mx-auto grid max-w-[1320px] gap-12 px-4 sm:px-6 lg:grid-cols-[22rem_1fr] lg:px-8">
           <aside className="lg:sticky lg:top-28 lg:self-start">

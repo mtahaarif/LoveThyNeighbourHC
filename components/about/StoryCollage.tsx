@@ -1,10 +1,10 @@
 'use client';
 
-import Image from 'next/image';
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 import type { Img } from '@/content/types';
+import CoverImage from '@/components/ui/CoverImage';
 
 /** Three layered photos that drift apart and rotate slightly as the story scrolls by. */
 export default function StoryCollage({ images }: { images: Img[] }) {
@@ -29,7 +29,7 @@ export default function StoryCollage({ images }: { images: Img[] }) {
           style={{ y: t[i].y, rotate: t[i].rotate, zIndex: i + 1 }}
           className={`absolute overflow-hidden rounded-[2rem] border-[6px] border-white bg-brand-100 shadow-card ${slots[i]}`}
         >
-          <Image src={img.src} alt={img.alt} fill loading={i === 0 ? 'eager' : 'lazy'} sizes="(min-width: 1024px) 420px, 70vw" className="object-cover" />
+          <CoverImage image={img} loading={i === 0 ? 'eager' : 'lazy'} sizes="(min-width: 1024px) 420px, 70vw" />
         </motion.div>
       ))}
       <div aria-hidden className="absolute -right-6 bottom-1/4 -z-10 size-40 rounded-full bg-accent-300/40 blur-2xl" />
