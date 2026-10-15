@@ -42,7 +42,7 @@ code are new.
 | --- | --- |
 | Framework | Next.js 16.4 (App Router, Turbopack, Cache Components) on React 19.3 |
 | Styling | Tailwind CSS 4.3, design tokens and the `.rich` article typography in `app/globals.css` |
-| Motion | Motion 14 (`motion/react`) and native view transitions via React `<ViewTransition>` |
+| Motion | CSS keyframes and CSS scroll-driven animations (`animation-timeline`) for almost everything; Motion 14 (`motion/react`) only on the blog index and account forms; native view transitions via React `<ViewTransition>` |
 | Icons | Lucide 1.x, plus inline SVG brand icons (Facebook, Instagram, X) |
 | Fonts | Manrope (body) and League Spartan (headings), self-hosted by `next/font` |
 | Rendering | Every page is statically prerendered (36 build outputs); only the two form APIs are dynamic |
@@ -135,7 +135,7 @@ flowchart LR
     M[content/metadata.ts<br/>per-route SEO]
   end
   subgraph App Router
-    L[app/layout.tsx<br/>fonts, navbar, footer,<br/>cookie toast, MotionProvider]
+    L[app/layout.tsx<br/>fonts, navbar, footer,<br/>cookie toast, scroll progress]
     P[app/**/page.tsx<br/>thin route files]
     API[app/api/contact<br/>app/api/subscribe]
   end
@@ -194,7 +194,7 @@ app/
   api/subscribe/route.ts     POST newsletter signup
 
 components/
-  layout/    SiteNavbar, SiteFooter, CookieConsent, ScrollProgress, MotionProvider
+  layout/    SiteNavbar, SiteFooter + FooterView, CookieConsent, ScrollProgress
   home/      HomeHero, CredentialsMarquee, CareHighlights, PrioritySplit, ServicesShowcase,
              CtaBand, ContactSection, NewsletterSection
   services/  ServiceCard, ServicePage
@@ -209,7 +209,7 @@ components/
              PageHero, PageTransition, BrandIcons
 
 content/     types.ts + one data module per area (see §8)
-lib/         dates, hours, form-submissions, use-media-query, use-prefers-reduced-motion
+lib/         dates, hours, form-submissions, site-url, use-prefers-reduced-motion
 public/      assets/images, assets/fonts, banner photos, manifest.webmanifest
 ```
 
@@ -367,9 +367,9 @@ items (01, 02, …).
 | **Animated tabs and layout filtering** | Blog index | `BlogBrowser`: shared-layout pill (`layoutId`), `AnimatePresence mode="popLayout"` re-flowing grid |
 | **Accordion** | FAQ | `FaqAccordion`: one panel open, height animation, rotating plus icon |
 | **Page transitions and image morphs** | All pages | React `<ViewTransition>` (see [§15](#15-page-transitions-react-viewtransition)) |
-| **Scroll progress bar** | All pages | `ScrollProgress`: spring-smoothed `scaleX` gradient bar fixed to the top edge |
+| **Scroll progress bar** | All pages | `ScrollProgress`: gradient bar fixed to the top edge, scaled by a CSS `scroll()` timeline |
 | **Animated aurora backgrounds** | PageHero, CTA band, newsletter, account pages, 404 | Large blurred circles with slow `float` animations, dot/grid overlays with radial masks |
-| **Micro-interactions** | Buttons (lift, icon rotate), arrows (nudge), images (slow zoom), floating labels on inputs, animated form success states | Tailwind transitions + Motion springs |
+| **Micro-interactions** | Buttons (lift, icon rotate), arrows (nudge), images (slow zoom), floating labels on inputs, animated form success states | Tailwind transitions and CSS keyframes (`animate-rise`, `animate-pop`, …) |
 
 ---
 
@@ -467,7 +467,6 @@ A large gradient "404", the original "Page Not Found" text and a **Go To Home Pa
 | `SiteFooter` | server | Services marquee (links), white logo, intro line, social buttons, Quick Links (original footer links minus services; labels from `navigation.ts`), Services list, contact column (address, phone, email, grouped hours "Mon – Fri / Sat – Sun"), copyright and domain. |
 | `CookieConsent` | client | Glass toast with the original cookie text; appears 1.2s after load unless the `cookie_terms=accepted` cookie exists; **Accept** sets it for one year (`SameSite=Lax`). |
 | `ScrollProgress` | client | `useScroll` → `useSpring` → `scaleX` on a fixed gradient bar. |
-| `MotionProvider` | client | `<MotionConfig reducedMotion="user">` for the whole app. |
 
 ### `components/ui/`
 
@@ -492,7 +491,7 @@ A large gradient "404", the original "Page Not Found" text and a **Go To Home Pa
 | `CredentialsMarquee` | server | Services and credentials chips. |
 | `CareHighlights` | client | Stacking cards (sticky offsets via CSS variables, scale/dim transforms, spacer); images wrapped in `ViewTransition name="highlight-<slug>"`. |
 | `PrioritySplit` | client | Parallax image (−8% → 8%) and badge (60 → −60px). |
-| `ServicesShowcase` | client | Pinned horizontal scroller; `useMediaQuery('(min-width: 1024px)')`; `ResizeObserver`; section id `services`. |
+| `ServicesShowcase` | server | Pinned horizontal scroller in pure CSS (`.svc-*` in `globals.css`): the track width is calculated in CSS and a view timeline drives it on desktop; swipe carousel elsewhere or without support. Section id `services`. |
 | `CtaBand` | server | Two-line title from `home.cta.lines`; magnetic call button with a ping halo. |
 | `ContactSection` | server | Section id `contact`; uses `ContactForm`, `HoursList`, `MapEmbed`. |
 | `NewsletterSection` | server | Uses `NewsletterForm`. |
@@ -525,7 +524,6 @@ A large gradient "404", the original "Page Not Found" text and a **Go To Home Pa
 | `dates.ts` | `formatDate(iso)` | `en-US` long dates in the `America/New_York` time zone (the business's), so server and browser output always match. |
 | `hours.ts` | `formatTime`, `formatRange`, `hoursFor`, `groupHours` | `"17:00" → "05:00 pm"` (the original's format); groups consecutive identical days ("Mon – Fri"). |
 | `form-submissions.ts` | `readSubmission(request, fields)`, `deliver(kind, data)` | Whitelists fields, trims, caps at 5,000 characters, requires a valid email; logs and optionally forwards to `FORMS_WEBHOOK_URL`. |
-| `use-media-query.ts` | `useMediaQuery(query)` | `useSyncExternalStore`; `false` on the server and during hydration. |
 | `use-prefers-reduced-motion.ts` | `usePrefersReducedMotion()` | Hydration-safe replacement for Motion's `useReducedMotion` (see §16). |
 
 ---
@@ -599,11 +597,13 @@ browser's View Transitions API. No configuration is needed.
 - **Images:** meaningful `alt` text (from the original site where it had any; descriptive alts were written for the
   hero slides); decorative elements are `aria-hidden`.
 - **Reduced motion:**
-  - `MotionConfig reducedMotion="user"` makes Motion skip transform and layout animations (fades remain).
-  - `usePrefersReducedMotion` (a `useSyncExternalStore` hook whose server snapshot is `false`) gates parallax,
-    stacking scale, slideshow autoplay, the magnetic effect and the pinned horizontal scroller. It is
-    *hydration-safe*: Motion's own `useReducedMotion` returned a different value on the first client render than on
-    the server, which caused React attribute mismatches for these visitors, so it isn't used anywhere.
+  - Every scroll-driven effect (reveals, parallax, stacking scale, timeline, pinned services scroller, progress
+    bar) is wrapped in `@media (prefers-reduced-motion: no-preference)`, so these visitors get the static layout.
+  - The blog index and account forms, the two places that still use Motion, wrap themselves in
+    `<MotionConfig reducedMotion="user">`.
+  - `usePrefersReducedMotion` (a `useSyncExternalStore` hook whose server snapshot is `false`) stops the hero
+    slideshow's autoplay. It is *hydration-safe*: Motion's own `useReducedMotion` returned a different value on
+    the first client render than on the server, which caused React attribute mismatches.
   - CSS: under `prefers-reduced-motion: reduce`, view-transition animations and CSS animations/transitions are
     effectively disabled and smooth scrolling is turned off.
 
@@ -727,8 +727,25 @@ Every response carries:
   - `/assets/*` (content-hashed originals): `max-age=1y, immutable`
   - root banner photos: 30 days plus `stale-while-revalidate`
 - **Fonts:** self-hosted through `next/font` with `display: swap` and no layout shift.
-- **CSS-only effects** where possible (marquees, hover reveals, aurora backgrounds). Motion is used for
-  scroll-linked and stateful animation.
+- **Motion removed from every page except the blog index.** The shared layout (navbar dropdowns and mobile sheet,
+  cookie toast, scroll progress) and every home, about and highlight component now animate with CSS. Without
+  that, the 44 KB (gzipped) library loaded and hydrated on every page.
+  - Scroll-linked effects use CSS scroll-driven animations in `globals.css`:
+    - `.parallax`: priority photo and badge, About collage
+    - `.stack-card` / `.stack-shade`: stacking cards, on the section's view timeline (a timeline on the list
+      starts late because of its sticky children)
+    - `.svc-*`: pinned services row
+    - `.timeline-*`: highlight timeline
+    - `.scroll-progress`: reading progress bar
+  - Enter/exit effects use keyframes: `animate-menu-in`, `animate-sheet-in/out`, `animate-toast-in/out`,
+    `animate-fade-in` with `animate-kenburns` for the slideshow crossfade, and `animate-pop`.
+  - The mobile sheet and cookie toast stay mounted until their exit animation ends (`onAnimationEnd`).
+  - Measured at 4× CPU slowdown on Home:
+    - JavaScript: 258 → 200 KB gzipped
+    - script time: 399 → 231 ms
+    - blocking time: 263 → 99 ms
+    - main-thread time: 1.9 → 1.4 s
+- **CSS-only effects** everywhere else (marquees, hover reveals, aurora backgrounds).
 - **Partial Prefetching / Cache Components** are enabled (Next 16 defaults).
 
 ---

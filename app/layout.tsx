@@ -5,7 +5,6 @@ import SiteNavbar from '@/components/layout/SiteNavbar';
 import SiteFooter from '@/components/layout/SiteFooter';
 import CookieConsent from '@/components/layout/CookieConsent';
 import ScrollProgress from '@/components/layout/ScrollProgress';
-import MotionProvider from '@/components/layout/MotionProvider';
 import { SITE_URL, TRUSTEDSITE_ENABLED } from '@/lib/site-url';
 import { SITE_NAME } from '@/content/metadata';
 import './globals.css';
@@ -53,13 +52,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en-US" className={`${manrope.variable} ${leagueSpartan.variable}`}>
       <body>
-        <MotionProvider>
-          <ScrollProgress />
-          <SiteNavbar />
-          <main id="main">{children}</main>
-          <SiteFooter />
-          <CookieConsent />
-        </MotionProvider>
+        <ScrollProgress />
+        <SiteNavbar />
+        <main id="main">{children}</main>
+        <SiteFooter />
+        <CookieConsent />
         {/* The seal is registered for lovethyneighborhhc.com; on any other host its config request fails (403). */}
         {TRUSTEDSITE_ENABLED && <Script src="https://cdn.trustedsite.com/js/1.js?position=bottomLeft&offset=15" strategy="lazyOnload" />}
       </body>

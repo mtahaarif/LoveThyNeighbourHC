@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { Info } from 'lucide-react';
 import FloatingField from '@/components/forms/FloatingField';
 import { EMAIL_RE, formMessages } from '@/components/forms/messages';
@@ -32,43 +32,46 @@ export default function AccountForm({ fields, submit, phone }: Props) {
   }
 
   return (
-    <form method="post" onSubmit={onSubmit} noValidate className="space-y-4">
-      <div className={`grid gap-4 ${fields.length === 4 ? 'sm:grid-cols-2' : ''}`}>
-        {fields.map((f) => (
-          <FloatingField
-            key={f.name}
-            name={f.name}
-            type={f.type === 'textarea' ? 'text' : f.type}
-            label={f.label}
-            autoComplete={f.autoComplete}
-            required={f.required}
-            error={errors[f.name]}
-          />
-        ))}
-      </div>
-      <button
-        type="submit"
-        className="w-full cursor-pointer rounded-full bg-brand-600 px-6 py-3.5 text-[15px] font-bold text-white shadow-card transition-all hover:-translate-y-0.5 hover:bg-brand-700"
-      >
-        {submit}
-      </button>
-      <AnimatePresence>
-        {notice && (
-          <motion.p
-            role="status"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="flex gap-3 rounded-2xl bg-brand-50 p-4 text-[14px] leading-relaxed text-brand-900 ring-1 ring-brand-100"
-          >
-            <Info className="mt-0.5 size-5 shrink-0 text-brand-500" aria-hidden />
-            <span>
-              Online accounts aren’t available yet. Please call us at{' '}
-              <a href={phone.href} className="font-bold text-brand-600 underline underline-offset-4">{phone.display}</a>.
-            </span>
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </form>
+    // Motion skips transform/layout animations for visitors who prefer reduced motion (opacity still fades).
+    <MotionConfig reducedMotion="user">
+      <form method="post" onSubmit={onSubmit} noValidate className="space-y-4">
+        <div className={`grid gap-4 ${fields.length === 4 ? 'sm:grid-cols-2' : ''}`}>
+          {fields.map((f) => (
+            <FloatingField
+              key={f.name}
+              name={f.name}
+              type={f.type === 'textarea' ? 'text' : f.type}
+              label={f.label}
+              autoComplete={f.autoComplete}
+              required={f.required}
+              error={errors[f.name]}
+            />
+          ))}
+        </div>
+        <button
+          type="submit"
+          className="w-full cursor-pointer rounded-full bg-brand-600 px-6 py-3.5 text-[15px] font-bold text-white shadow-card transition-all hover:-translate-y-0.5 hover:bg-brand-700"
+        >
+          {submit}
+        </button>
+        <AnimatePresence>
+          {notice && (
+            <motion.p
+              role="status"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="flex gap-3 rounded-2xl bg-brand-50 p-4 text-[14px] leading-relaxed text-brand-900 ring-1 ring-brand-100"
+            >
+              <Info className="mt-0.5 size-5 shrink-0 text-brand-500" aria-hidden />
+              <span>
+                Online accounts aren’t available yet. Please call us at{' '}
+                <a href={phone.href} className="font-bold text-brand-600 underline underline-offset-4">{phone.display}</a>.
+              </span>
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </form>
+    </MotionConfig>
   );
 }

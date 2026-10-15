@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import { AnimatePresence, LayoutGroup, motion } from 'motion/react';
+import { AnimatePresence, LayoutGroup, MotionConfig, motion } from 'motion/react';
 
 type Props = {
   categories: string[];
@@ -20,52 +20,55 @@ export default function BlogBrowser({ categories, posts, cards, featured, featur
   const visible = all ? posts.filter((p) => p.slug !== featuredSlug) : posts.filter((p) => p.categories.includes(active));
 
   return (
-    <div>
-      <LayoutGroup>
-        <div role="tablist" aria-label="Categories" className="inline-flex rounded-full bg-brand-50 p-1.5 ring-1 ring-brand-100">
-          {categories.map((c) => {
-            const selected = c === active;
-            return (
-              <button
-                key={c}
-                role="tab"
-                type="button"
-                aria-selected={selected}
-                onClick={() => setActive(c)}
-                className={`relative cursor-pointer rounded-full px-6 py-2.5 text-[14px] font-bold transition-colors ${selected ? 'text-white' : 'text-brand-800 hover:text-brand-600'}`}
-              >
-                {selected && <motion.span layoutId="blog-tab" className="absolute inset-0 -z-0 rounded-full bg-brand-600 shadow-soft" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
-                <span className="relative">{c}</span>
-              </button>
-            );
-          })}
-        </div>
-      </LayoutGroup>
+    // Motion skips transform/layout animations for visitors who prefer reduced motion (opacity still fades).
+    <MotionConfig reducedMotion="user">
+      <div>
+        <LayoutGroup>
+          <div role="tablist" aria-label="Categories" className="inline-flex rounded-full bg-brand-50 p-1.5 ring-1 ring-brand-100">
+            {categories.map((c) => {
+              const selected = c === active;
+              return (
+                <button
+                  key={c}
+                  role="tab"
+                  type="button"
+                  aria-selected={selected}
+                  onClick={() => setActive(c)}
+                  className={`relative cursor-pointer rounded-full px-6 py-2.5 text-[14px] font-bold transition-colors ${selected ? 'text-white' : 'text-brand-800 hover:text-brand-600'}`}
+                >
+                  {selected && <motion.span layoutId="blog-tab" className="absolute inset-0 -z-0 rounded-full bg-brand-600 shadow-soft" transition={{ type: 'spring', stiffness: 380, damping: 32 }} />}
+                  <span className="relative">{c}</span>
+                </button>
+              );
+            })}
+          </div>
+        </LayoutGroup>
 
-      <AnimatePresence initial={false}>
-        {all && (
-          <motion.div key="featured" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-            <div className="pt-10">{featured}</div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <motion.ul layout className="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-        <AnimatePresence mode="popLayout" initial={false}>
-          {visible.map((p, i) => (
-            <motion.li
-              key={p.slug}
-              layout
-              initial={{ opacity: 0, y: 24, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.45, delay: Math.min(i, 6) * 0.04, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {cards[p.slug]}
-            </motion.li>
-          ))}
+        <AnimatePresence initial={false}>
+          {all && (
+            <motion.div key="featured" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+              <div className="pt-10">{featured}</div>
+            </motion.div>
+          )}
         </AnimatePresence>
-      </motion.ul>
-    </div>
+
+        <motion.ul layout className="mt-10 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {visible.map((p, i) => (
+              <motion.li
+                key={p.slug}
+                layout
+                initial={{ opacity: 0, y: 24, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.45, delay: Math.min(i, 6) * 0.04, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {cards[p.slug]}
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+      </div>
+    </MotionConfig>
   );
 }

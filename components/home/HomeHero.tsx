@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
 import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
 import { ArrowRight, BadgeCheck, Clock3, MapPin, Phone } from 'lucide-react';
 import { hours, location, phone } from '@/content/navigation';
@@ -19,12 +18,14 @@ const slides = [
 const credentials = ['Medicare-certified', 'Medicaid-licensed', 'AHCA-licensed'];
 
 export default function HomeHero() {
-  const [index, setIndex] = useState(0);
+  // `prev` stays underneath while the new slide fades in over it (CSS keyframes, no animation library).
+  const [{ index, prev }, setSlide] = useState<{ index: number; prev: number | null }>({ index: 0, prev: null });
   const reduce = usePrefersReducedMotion();
+  const show = (next: number) => setSlide((s) => (next === s.index ? s : { index: next, prev: s.index }));
 
   useEffect(() => {
     if (reduce) return;
-    const t = setTimeout(() => setIndex((i) => (i + 1) % slides.length), AUTOPLAY_MS);
+    const t = setTimeout(() => setSlide((s) => ({ index: (s.index + 1) % slides.length, prev: s.index })), AUTOPLAY_MS);
     return () => clearTimeout(t);
   }, [index, reduce]);
 
@@ -75,30 +76,22 @@ export default function HomeHero() {
         {/* Visual */}
         <div className="relative animate-settle lg:pl-4">
           <div className="relative mx-auto aspect-square w-full max-w-[34rem] overflow-hidden rounded-[2rem] bg-brand-100 shadow-card ring-1 ring-black/5">
-            <AnimatePresence initial={false}>
-              <motion.div
-                key={index}
-                className="absolute inset-0"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1, ease: 'easeInOut' }}
-              >
-                <motion.div
-                  className="absolute inset-0 origin-center"
-                  initial={{ scale: reduce ? 1 : 1.08 }}
-                  animate={{ scale: 1 }}
-                  transition={{ duration: AUTOPLAY_MS / 1000 + 1, ease: 'linear' }}
-                >
-                  <CoverImage
-                    image={slides[index]}
-                    loading="eager"
-                    fetchPriority={index === 0 ? 'high' : 'auto'}
-                    sizes="(min-width: 1024px) 560px, 100vw"
-                  />
-                </motion.div>
-              </motion.div>
-            </AnimatePresence>
+            {prev !== null && (
+              <div key={`under-${prev}`} className="absolute inset-0">
+                <CoverImage image={slides[prev]} sizes="(min-width: 1024px) 560px, 100vw" />
+              </div>
+            )}
+            {/* The first slide is painted as-is (it is the LCP image); later slides cross-fade and slowly zoom out. */}
+            <div key={index} className={`absolute inset-0 ${prev === null ? '' : 'animate-fade-in'}`}>
+              <div className={`absolute inset-0 ${prev === null ? '' : 'animate-kenburns'}`}>
+                <CoverImage
+                  image={slides[index]}
+                  loading="eager"
+                  fetchPriority={index === 0 ? 'high' : 'auto'}
+                  sizes="(min-width: 1024px) 560px, 100vw"
+                />
+              </div>
+            </div>
             <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-brand-950/45 via-transparent to-transparent" />
 
             {/* Slide progress */}
@@ -110,7 +103,7 @@ export default function HomeHero() {
                   role="tab"
                   aria-selected={i === index}
                   aria-label={`Show slide ${i + 1}`}
-                  onClick={() => setIndex(i)}
+                  onClick={() => show(i)}
                   className="relative h-1.5 w-9 cursor-pointer overflow-hidden rounded-full border-0 bg-white/40 p-0"
                 >
                   {i === index && (
@@ -127,26 +120,20 @@ export default function HomeHero() {
           </div>
 
           {/* Floating cards */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: [0, -6, 0] }}
-            transition={{ opacity: { delay: 0.6, duration: 0.6 }, y: { delay: 1.2, duration: 6, repeat: Infinity, ease: 'easeInOut' } }}
-            className="absolute -bottom-6 left-3 flex items-center gap-3 rounded-2xl bg-white/90 p-3.5 pr-5 shadow-card ring-1 ring-slate-900/5 backdrop-blur-md sm:left-6 lg:-left-6"
-          >
-            <span className="grid size-11 place-items-center rounded-xl bg-brand-600 text-white"><Clock3 className="size-5" aria-hidden /></span>
-            <span className="flex flex-col">
-              <span className="text-[12px] font-bold tracking-wide text-slate-500 uppercase">Hours · {hours.days}</span>
-              <span className="text-[15px] font-bold text-brand-950">{hours.time}</span>
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.75, duration: 0.6 }}
-            className="absolute top-5 right-5 flex items-center gap-1.5 rounded-full bg-white/90 px-3.5 py-2 text-[13px] font-bold text-brand-800 shadow-soft backdrop-blur-md"
+          <div className="absolute -bottom-6 left-3 animate-rise [animation-delay:600ms] sm:left-6 lg:-left-6">
+            <div className="flex animate-[float_6s_ease-in-out_1.2s_infinite] items-center gap-3 rounded-2xl bg-white/90 p-3.5 pr-5 shadow-card ring-1 ring-slate-900/5 backdrop-blur-md">
+              <span className="grid size-11 place-items-center rounded-xl bg-brand-600 text-white"><Clock3 className="size-5" aria-hidden /></span>
+              <span className="flex flex-col">
+                <span className="text-[12px] font-bold tracking-wide text-slate-500 uppercase">Hours · {hours.days}</span>
+                <span className="text-[15px] font-bold text-brand-950">{hours.time}</span>
+              </span>
+            </div>
+          </div>
+          <div
+            className="absolute top-5 right-5 flex animate-rise items-center [animation-delay:750ms] gap-1.5 rounded-full bg-white/90 px-3.5 py-2 text-[13px] font-bold text-brand-800 shadow-soft backdrop-blur-md"
           >
             <MapPin className="size-4 text-accent-500" aria-hidden /> {location}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

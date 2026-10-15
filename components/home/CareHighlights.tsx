@@ -1,40 +1,33 @@
-'use client';
-
 import Link from 'next/link';
-import { useRef, ViewTransition } from 'react';
-import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
-import { usePrefersReducedMotion } from '@/lib/use-prefers-reduced-motion';
+import { ViewTransition, type CSSProperties } from 'react';
 import { ArrowUpRight, ClipboardList, HeartPulse, MessagesSquare } from 'lucide-react';
 import { careHighlights, type CareHighlight } from '@/content/home';
 import CoverImage from '@/components/ui/CoverImage';
 
 const icons = [ClipboardList, HeartPulse, MessagesSquare];
 
-type CardProps = {
-  card: CareHighlight;
-  index: number;
-  total: number;
-  progress: MotionValue<number>;
-};
+type CardProps = { card: CareHighlight; index: number; total: number };
 
-function StackCard({ card, index, total, progress }: CardProps) {
-  const reduce = usePrefersReducedMotion();
+function StackCard({ card, index, total }: CardProps) {
   const Icon = icons[index % icons.length];
-  // While later cards slide over this one it recedes slightly, so the stack reads with depth.
-  const start = index / total;
-  const targetScale = 1 - (total - 1 - index) * 0.045;
-  const scale = useTransform(progress, [start, 1], [1, reduce ? 1 : targetScale]);
-  const dim = useTransform(progress, [start, 1], [0, reduce ? 0 : (total - 1 - index) * 0.07]);
   const number = String(index + 1).padStart(2, '0');
+  // While later cards slide over this one it recedes slightly, so the stack reads with depth. The scale and
+  // shade run on the section's scroll timeline (`.stack-card` / `.stack-shade` in globals.css), from this
+  // card's share of the scroll (index / total) to the end. The timeline sits on the section, not the list:
+  // the list's sticky children make Chrome start a list timeline late.
+  const vars = {
+    top: `calc(var(--stack-top) + ${index} * var(--stack-step))`,
+    zIndex: index + 1,
+    '--i': index,
+    '--n': total,
+    '--stack-scale': 1 - (total - 1 - index) * 0.045,
+    '--stack-dim': (total - 1 - index) * 0.07,
+  } as CSSProperties;
 
   return (
-    <li
-      className="sticky mb-[12vh] list-none lg:mb-[16vh]"
-      style={{ top: `calc(var(--stack-top) + ${index} * var(--stack-step))`, zIndex: index + 1 }}
-    >
-      <motion.article
-        style={{ scale, transformOrigin: 'top center' }}
-        className="group relative flex h-[34rem] flex-col overflow-hidden rounded-[2rem] bg-white shadow-card ring-1 ring-slate-900/5 sm:h-[30rem] lg:h-[24.5rem] lg:flex-row"
+    <li className="sticky mb-[12vh] list-none lg:mb-[16vh]" style={vars}>
+      <article
+        className="stack-card group relative origin-top flex h-[34rem] flex-col overflow-hidden rounded-[2rem] bg-white shadow-card ring-1 ring-slate-900/5 sm:h-[30rem] lg:h-[24.5rem] lg:flex-row"
       >
         {/* Photo */}
         <div className="relative h-52 shrink-0 overflow-hidden sm:h-56 lg:h-auto lg:w-[44%]">
@@ -75,20 +68,18 @@ function StackCard({ card, index, total, progress }: CardProps) {
         </div>
 
         {/* Receding overlay */}
-        <motion.div aria-hidden style={{ opacity: dim }} className="pointer-events-none absolute inset-0 bg-brand-950" />
-      </motion.article>
+        <div aria-hidden className="stack-shade pointer-events-none absolute inset-0 bg-brand-950 opacity-0" />
+      </article>
     </li>
   );
 }
 
 export default function CareHighlights() {
-  const listRef = useRef<HTMLUListElement>(null);
-  const { scrollYProgress } = useScroll({ target: listRef, offset: ['start start', 'end end'] });
   const { title, cards } = careHighlights;
 
   return (
     <section
-      className="relative bg-gradient-to-b from-white via-brand-50/60 to-white py-20 font-sans sm:py-24 lg:py-28 [--stack-step:18px] [--stack-top:88px] lg:[--stack-step:24px] lg:[--stack-top:112px]"
+      className="relative bg-gradient-to-b from-white via-brand-50/60 to-white py-20 font-sans [view-timeline-name:--stack] sm:py-24 lg:py-28 [--stack-step:18px] [--stack-top:88px] lg:[--stack-step:24px] lg:[--stack-top:112px]"
       aria-labelledby="care-highlights-title"
     >
       <div className="mx-auto grid max-w-[1320px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.6fr] lg:gap-16 lg:px-8">
@@ -110,9 +101,9 @@ export default function CareHighlights() {
           </div>
         </div>
 
-        <ul ref={listRef} className="m-0 p-0 pb-[8vh]">
+        <ul className="m-0 p-0 pb-[8vh]">
           {cards.map((card, i) => (
-            <StackCard key={card.href} card={card} index={i} total={cards.length} progress={scrollYProgress} />
+            <StackCard key={card.href} card={card} index={i} total={cards.length} />
           ))}
           {/* Sticky items keep their margin box inside the list, so this spacer is what holds the
               fully stacked state on screen for a moment before the section scrolls away. */}
