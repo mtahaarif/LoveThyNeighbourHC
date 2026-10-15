@@ -13,7 +13,7 @@ export default function PrioritySplit() {
   const { eyebrow, title, body, image } = home.split;
 
   return (
-    <section className="relative overflow-hidden bg-white py-24 [view-timeline-name:--split] lg:py-32" aria-labelledby="priority-title">
+    <section className="defer-render relative overflow-hidden bg-white py-24 [view-timeline-name:--split] lg:py-32" aria-labelledby="priority-title">
       <div className="mx-auto grid max-w-[1320px] items-center gap-16 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
         <div className="relative">
           <div aria-hidden className="absolute -top-10 -left-10 size-48 animate-spin-slow rounded-full border-2 border-dashed border-brand-200" />

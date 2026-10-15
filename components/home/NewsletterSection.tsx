@@ -7,7 +7,7 @@ import { home } from '@/content/home';
 export default function NewsletterSection() {
   const n = home.newsletter;
   return (
-    <section aria-labelledby="newsletter-title" className="relative isolate overflow-hidden bg-brand-900 py-24">
+    <section aria-labelledby="newsletter-title" className="defer-render relative [contain-intrinsic-size:auto_520px] isolate overflow-hidden bg-brand-900 py-24">
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute -top-32 left-[10%] size-[28rem] animate-[float_16s_ease-in-out_infinite] rounded-full bg-brand-500/50 blur-3xl" />
         <div className="absolute right-[5%] -bottom-40 size-[30rem] animate-[float_20s_ease-in-out_infinite_reverse] rounded-full bg-teal-brand/30 blur-3xl" />

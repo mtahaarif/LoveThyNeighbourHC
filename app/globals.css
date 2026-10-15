@@ -243,6 +243,13 @@
   .rich-dark :where(a) { color: var(--color-accent-300); text-decoration-color: currentColor; }
 }
 
+/* Below-the-fold sections: the browser skips their style, layout and paint until they near the viewport,
+   which shortens the first render. `auto` remembers each section's real height once it has rendered. */
+@utility defer-render {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 @utility glass {
   @apply border border-white/50 bg-white/70 backdrop-blur-xl;
 }

@@ -8,7 +8,7 @@ import { site } from '@/content/site';
 export default function CtaBand() {
   const [first, ...rest] = home.cta.lines;
   return (
-    <section className="relative px-4 py-20 sm:px-6 lg:px-8" aria-label="Call us">
+    <section className="defer-render relative px-4 py-20 [contain-intrinsic-size:auto_560px] sm:px-6 lg:px-8" aria-label="Call us">
       <div className="relative isolate mx-auto max-w-[1320px] overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-brand-700 via-brand-600 to-brand-800 px-6 py-16 text-center shadow-card sm:px-12 lg:py-24">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute -top-24 -left-16 size-80 animate-[float_12s_ease-in-out_infinite] rounded-full bg-teal-brand/40 blur-3xl" />

@@ -745,6 +745,14 @@ Every response carries:
     - script time: 399 → 231 ms
     - blocking time: 263 → 99 ms
     - main-thread time: 1.9 → 1.4 s
+- **Deferred rendering below the fold (`defer-render` utility in `globals.css`).** The home page's priority split,
+  call-to-action band, contact and newsletter sections use `content-visibility: auto` with an estimated
+  `contain-intrinsic-size`, so their style, layout and paint wait until they near the viewport.
+  - Measured on Home at 4× CPU slowdown: style+layout 417 → 252 ms, main-thread time 1.29 → 0.87 s.
+  - Not used on the footer or anything with internal links. Skipped content reads as empty to tools that
+    measure rendered text (SiteChecker evaluates the hydrated DOM), so footer anchors would look empty.
+  - Not used on the stacking cards or the pinned services row, whose sticky positioning and scroll timelines
+    don't mix well with containment.
 - **CSS-only effects** everywhere else (marquees, hover reveals, aurora backgrounds).
 - **Partial Prefetching / Cache Components** are enabled (Next 16 defaults).
 

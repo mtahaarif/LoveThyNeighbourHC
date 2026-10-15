@@ -12,7 +12,7 @@ import { site } from '@/content/site';
 export default function ContactSection() {
   const c = home.contact;
   return (
-    <section id="contact" aria-labelledby="contact-title" className="relative isolate overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-50 py-24 lg:py-32">
+    <section id="contact" aria-labelledby="contact-title" className="defer-render relative [contain-intrinsic-size:auto_2000px] lg:[contain-intrinsic-size:auto_1000px] isolate overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-50 py-24 lg:py-32">
       <div aria-hidden className="absolute top-1/3 -left-40 -z-10 size-[30rem] rounded-full bg-brand-200/40 blur-3xl" />
       <div className="mx-auto grid max-w-[1320px] gap-12 px-4 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:px-8">
         <div>
