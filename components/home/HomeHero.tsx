@@ -42,16 +42,16 @@ export default function HomeHero() {
         <div className="max-w-xl">
 
           {/* Entrances are CSS animations: they start at first paint instead of after hydration (LCP). */}
-          <h1 className="mt-5 mb-0 animate-rise font-display [animation-delay:80ms] text-[2.6rem] leading-[1.02] font-bold tracking-tight text-brand-950 sm:text-6xl lg:text-[4.1rem]">
+          <h1 className="mt-5 mb-0 animate-rise font-display [animation-delay:40ms] text-[2.6rem] leading-[1.02] font-bold tracking-tight text-brand-950 sm:text-6xl lg:text-[4.1rem]">
             Better Skills, Better Care,{' '}
             <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-teal-brand bg-clip-text text-transparent">Better Results</span>
           </h1>
 
-          <p className="mt-5 mb-0 max-w-lg animate-rise [animation-delay:160ms] text-[17px] leading-relaxed text-slate-600">
+          <p className="mt-5 mb-0 max-w-lg animate-rise [animation-delay:80ms] text-[17px] leading-relaxed text-slate-600">
             Your health and comfort matter—contact us now to get started with personalized home care services.
           </p>
 
-          <div className="mt-8 flex animate-rise [animation-delay:240ms] flex-wrap items-center gap-3">
+          <div className="mt-8 flex animate-rise [animation-delay:120ms] flex-wrap items-center gap-3">
             <a href={phone.href} className="group inline-flex items-center gap-2.5 rounded-full bg-brand-600 py-3 pr-6 pl-3 text-[15px] font-bold text-white no-underline shadow-card transition-all hover:-translate-y-0.5 hover:bg-brand-700">
               <span className="grid size-8 place-items-center rounded-full bg-white/15 transition-transform group-hover:rotate-12"><Phone className="size-4" aria-hidden /></span>
               Call Us
@@ -62,7 +62,7 @@ export default function HomeHero() {
             </a>
           </div>
 
-          <ul className="mt-9 mb-0 flex animate-rise [animation-delay:320ms] list-none flex-wrap gap-x-6 gap-y-3 p-0">
+          <ul className="mt-9 mb-0 flex animate-rise [animation-delay:160ms] list-none flex-wrap gap-x-6 gap-y-3 p-0">
             {credentials.map((c) => (
               <li key={c} className="flex items-center gap-2 text-[14px] font-semibold text-slate-700">
                 <BadgeCheck className="size-5 text-brand-500" aria-hidden />

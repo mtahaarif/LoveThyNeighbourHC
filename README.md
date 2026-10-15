@@ -41,7 +41,7 @@ code are new.
 | | |
 | --- | --- |
 | Framework | Next.js 16.4 (App Router, Turbopack, Cache Components) on React 19.3 |
-| Styling | Tailwind CSS 4.3 (+ typography plugin), design tokens in `app/globals.css` |
+| Styling | Tailwind CSS 4.3, design tokens and the `.rich` article typography in `app/globals.css` |
 | Motion | Motion 14 (`motion/react`) and native view transitions via React `<ViewTransition>` |
 | Icons | Lucide 1.x, plus inline SVG brand icons (Facebook, Instagram, X) |
 | Fonts | Manrope (body) and League Spartan (headings), self-hosted by `next/font` |
@@ -114,7 +114,6 @@ What the extraction preserved from the original site:
 | `motion` | ^14.1.0 | Animations (`motion/react` re-exports framer-motion: `motion`, `AnimatePresence`, `useScroll`, `useTransform`, `useSpring`, `LayoutGroup`, `MotionConfig`) |
 | `lucide-react` | ^1.55.0 | Icon set (1.x no longer ships brand logos, hence `components/ui/BrandIcons.tsx`) |
 | `tailwindcss`, `@tailwindcss/postcss` | ^4.3.3 | Utility CSS; configured CSS-first in `app/globals.css` via `@theme` |
-| `@tailwindcss/typography` | ^0.5.20 | `prose` styles for rich text (service bodies, blog articles) |
 | `typescript` | ^5 | Strict mode |
 | `eslint`, `eslint-config-next` | ^9 / 16.4.0 | Linting, including the React-Compiler-era `react-hooks` rules |
 
@@ -308,6 +307,12 @@ Defaults: page background white, body text `slate-700`, text selection uses `bra
 - Loaded by `next/font/google` in `app/layout.tsx` and exposed as CSS variables on `<html>`. They must be
   on `<html>`: Tailwind defines `--font-sans` on `:root`, and a variable referenced there must be defined on the
   same element.
+- **Article text (`.rich`, `.rich-lg`, `.rich-dark` in `globals.css`).** `RichText` uses a small hand-written
+  stylesheet instead of `@tailwindcss/typography`. It covers only the tags the content uses (p, h2–h4, a, strong,
+  em, lists with check-badge bullets, figure/img, hr) and follows the plugin's `prose`/`prose-lg` spacing. This
+  removed about 25 KB from the site's only stylesheet.
+- **Tailwind scans only `app/`, `components/` and `lib/`** (`@import 'tailwindcss' source(none)` plus `@source`).
+  Otherwise words in the README or the content would generate utilities.
 
 ### Shadows, easing, utilities
 
@@ -436,7 +441,7 @@ social buttons.
 ### Blog post (`/blogs/f/[slug]`)
 
 PageHero with breadcrumb (Blogs → title), excerpt, date and reading time, and the featured photo (morph target
-`post-<slug>`) → the article (`RichText` at `prose-lg`) beside a sticky sidebar (categories, 3 recent posts with
+`post-<slug>`) → the article (`RichText` at `size="lg"`) beside a sticky sidebar (categories, 3 recent posts with
 thumbnails, Facebook/X share links) → previous/next post cards. All 12 slugs are generated at build time.
 
 ### Account pages (`/m/*`)
@@ -686,11 +691,22 @@ Every response carries:
   `globals.css`), not Motion's `initial={{ opacity: 0 }}`, which server-renders hidden content and holds LCP until
   hydration. LCP elements are never faded: `settle` only moves.
   - Measured with devtools throttling, LCP went from 5.7 s to 2.7 s (home) and from 3.4 s to 2.6 s (About).
-  - Scroll-triggered `Reveal` is still used below the fold.
-- **Inline CSS (`experimental.inlineCss`).** Styles ship inside the HTML instead of a render-blocking stylesheet.
-  - Measured with Lighthouse (mobile, devtools throttling), LCP went from 2.7 s to 2.1 s (home), 2.6 s to 1.8 s
-    (About) and 2.4 s to 1.8 s (How to Get Started).
-  - Trade-off: a larger HTML document, and no separately cached stylesheet for repeat visits.
+  - Entrances are short (0.5 s rise, 0.6 s settle, delays of 160 ms or less), so the page is visually complete
+    sooner (Speed Index).
+- **Scroll reveals need no JavaScript.** `Reveal` (51 uses) renders a plain element with the `.reveal` class.
+  - It fades in through a CSS scroll-driven animation (`animation-timeline: view()`), fully visible once its top is
+    about 180px into view.
+  - The `delay` prop maps to stagger classes (`.reveal-s1`–`.reveal-s8`).
+  - Nothing hydrates, the HTML is complete without JavaScript, and browsers without support (or visitors who prefer
+    reduced motion) simply see the content. Motion remains for the stateful and scroll-linked components.
+- **Footer data, not footer markup, in the payload.** `SiteFooter` (server) passes plain links and labels to
+  `FooterView` (client, stateless). The App Router no longer serializes the whole footer tree into every page's
+  inline RSC payload, which is now 25–45% of each page.
+- **No inline CSS.** `experimental.inlineCss` was tried and removed.
+  - Next 16.4 embedded the stylesheet three times per page: once as a `<style>` tag and twice in the RSC
+    payload, about 360 KB in all.
+  - That made the payload "dominate" every page and pushed the text-to-code ratio to about 1%.
+  - Instead, the one stylesheet was slimmed to about 95 KB (15 KB gzipped) and is cached across pages.
 - **`next/image`** everywhere with `sizes` hints, AVIF then WebP (`images.formats`), 31-day optimizer cache.
   `deviceSizes` stops at 1920 (no 2048/3840 variants). `components/ui/CoverImage.tsx` replaces `<Image fill>`: it
   covers its parent the same way but keeps the intrinsic `width`/`height` attributes, as do the `PageHero` banner

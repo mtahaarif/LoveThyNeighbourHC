@@ -34,12 +34,6 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
-  experimental: {
-    // CSS ships inside the HTML instead of a render-blocking <link>. Measured (Lighthouse, mobile, devtools
-    // throttling): LCP home 2.7s → 2.1s, About 2.6s → 1.8s, How to Get Started 2.4s → 1.8s. The cost is a larger
-    // HTML document and no separately cached stylesheet for repeat visits.
-    inlineCss: true,
-  },
   images: {
     // AVIF first (smallest), WebP fallback; the optimizer negotiates per browser.
     formats: ["image/avif", "image/webp"],

@@ -1,7 +1,7 @@
 import { getImageProps } from 'next/image';
 import Link from 'next/link';
 import { ViewTransition, type ReactNode } from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, House } from 'lucide-react';
 import type { Img } from '@/content/types';
 import { absoluteUrl } from '@/lib/site-url';
 import { Eyebrow } from './SectionHeading';
@@ -79,7 +79,10 @@ export default function PageHero({ title, background, eyebrow, description, crum
                 {[{ label: 'Home', href: '/' }, ...crumbs].map((c, i, all) => (
                   <li key={c.label} className="flex items-center gap-1.5">
                     {c.href && i < all.length - 1 ? (
-                      <Link href={c.href} className="transition-colors hover:text-white">{c.label}</Link>
+                      <Link href={c.href} className="inline-flex items-center transition-colors hover:text-white">
+                        {/* The root crumb is a house icon; its link text names the site rather than repeating "Home". */}
+                        {i === 0 ? <><House className="size-3.5" aria-hidden /><span className="sr-only">Love Thy Neighbor home page</span></> : c.label}
+                      </Link>
                     ) : (
                       <span aria-current="page" className="text-white">{c.label}</span>
                     )}
@@ -89,12 +92,12 @@ export default function PageHero({ title, background, eyebrow, description, crum
               </ol>
             </nav>
           )}
-          {eyebrow && <div className={`mt-6 animate-rise [animation-delay:50ms] ${image ? '' : 'flex justify-center'}`}><Eyebrow tone="dark">{eyebrow}</Eyebrow></div>}
-          <h1 className="mt-5 animate-rise font-display [animation-delay:100ms] text-4xl leading-[1.04] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">{title}</h1>
+          {eyebrow && <div className={`mt-6 animate-rise [animation-delay:30ms] ${image ? '' : 'flex justify-center'}`}><Eyebrow tone="dark">{eyebrow}</Eyebrow></div>}
+          <h1 className="mt-5 animate-rise font-display [animation-delay:60ms] text-4xl leading-[1.04] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">{title}</h1>
           {description && (
-            <div className={`mt-6 animate-rise text-[17px] [animation-delay:180ms] leading-relaxed text-brand-100/85 ${image ? 'max-w-xl' : 'mx-auto max-w-2xl'}`}>{description}</div>
+            <div className={`mt-6 animate-rise text-[17px] [animation-delay:90ms] leading-relaxed text-brand-100/85 ${image ? 'max-w-xl' : 'mx-auto max-w-2xl'}`}>{description}</div>
           )}
-          {children && <div className="mt-8 animate-rise [animation-delay:240ms]">{children}</div>}
+          {children && <div className="mt-8 animate-rise [animation-delay:120ms]">{children}</div>}
         </div>
 
         {image && (

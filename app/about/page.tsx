@@ -32,7 +32,7 @@ export default function AboutPage() {
               <h2 className="mt-5 font-display text-4xl leading-[1.08] font-bold tracking-tight text-brand-950 sm:text-5xl">{about.headline}</h2>
             </Reveal>
             <Reveal delay={0.12} className="mt-8">
-              <RichText html={about.body} size="lg" className="prose-p:mb-7 [&>p:first-child]:text-xl [&>p:first-child]:font-medium [&>p:first-child]:text-brand-900" />
+              <RichText html={about.body} size="lg" className="[&_p]:mb-7 [&>p:first-child]:text-xl [&>p:first-child]:font-medium [&>p:first-child]:text-brand-900" />
             </Reveal>
           </div>
         </div>

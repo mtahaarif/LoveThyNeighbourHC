@@ -1,8 +1,7 @@
-'use client';
+import type { CSSProperties, HTMLAttributes } from 'react';
 
-import { motion, type HTMLMotionProps } from 'motion/react';
-
-type Props = HTMLMotionProps<'div'> & {
+type Props = HTMLAttributes<HTMLElement> & {
+  /** Stagger, in seconds; shifts where in the scroll the element starts appearing. */
   delay?: number;
   /** Distance travelled while fading in (px). */
   y?: number;
@@ -11,19 +10,20 @@ type Props = HTMLMotionProps<'div'> & {
 };
 
 /**
- * Fades and slides its children in the first time they scroll into view. Renders identically on server
- * and client; for reduced-motion visitors MotionConfig (see MotionProvider) drops the slide, keeping the fade.
+ * Fades and slides its children in as they scroll into view, using a CSS scroll-driven animation (`.reveal` in
+ * globals.css). No JavaScript, so nothing waits on hydration and the content is fully visible in the HTML.
+ * Browsers without `animation-timeline` support, and visitors who prefer reduced motion, see the content as is.
  */
-export default function Reveal({ delay = 0, y = 28, x = 0, as = 'div', children, ...rest }: Props) {
-  const Tag = motion[as] as typeof motion.div;
+export default function Reveal({ delay = 0, y = 28, x = 0, as: Tag = 'div', className = '', style, children, ...rest }: Props) {
+  // Stagger via one of eight predefined classes (no inline style); only a non-default distance needs a variable.
+  const step = Math.min(8, Math.round(delay / 0.05));
+  const vars = {
+    ...(y !== 28 ? { '--reveal-y': `${y}px` } : {}),
+    ...(x !== 0 ? { '--reveal-x': `${x}px` } : {}),
+    ...style,
+  } as CSSProperties;
   return (
-    <Tag
-      initial={{ opacity: 0, y, x }}
-      whileInView={{ opacity: 1, y: 0, x: 0 }}
-      viewport={{ once: true, margin: '0px 0px -12% 0px' }}
-      transition={{ duration: 0.75, delay, ease: [0.16, 1, 0.3, 1] }}
-      {...rest}
-    >
+    <Tag className={`reveal ${step ? `reveal-s${step}` : ''} ${className}`} style={Object.keys(vars).length ? vars : undefined} {...rest}>
       {children}
     </Tag>
   );
