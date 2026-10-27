@@ -44,7 +44,7 @@ export default function HomeHero() {
 
           {/* Entrances are CSS animations: they start at first paint instead of after hydration (LCP). */}
           <h1 className="mt-5 mb-0 animate-rise font-display [animation-delay:40ms] text-[2.6rem] leading-[1.02] font-bold tracking-tight text-brand-950 sm:text-6xl lg:text-[4.1rem]">
-            Better Skills Better Care{' '}
+            Better Skills, Better Care,{' '}
             <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-teal-brand bg-clip-text text-transparent">Better Results</span>
           </h1>
 

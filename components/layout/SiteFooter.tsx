@@ -36,6 +36,7 @@ export default function SiteFooter() {
       address={site.address}
       phone={site.phone}
       email={site.email}
+      licenseNumber={site.licenseNumber}
       hours={groupHours(site.hours).map((g) => ({ label: g.label, range: formatRange(g.hours, site.hoursLabels.closed) }))}
       copyright={site.copyright}
       domain={site.domain}

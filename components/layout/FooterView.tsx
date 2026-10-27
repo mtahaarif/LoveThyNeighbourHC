@@ -18,6 +18,7 @@ export type FooterData = {
   address: string;
   phone: { href: string; display: string };
   email: string;
+  licenseNumber: string;
   hours: { label: string; range: string }[];
   copyright: string;
   domain: string;
@@ -27,7 +28,7 @@ export type FooterData = {
  * The footer's markup. It is a client component only so that the payload carries this small data object rather
  * than the whole footer tree on every page (the HTML is server-rendered either way); it has no state or effects.
  */
-export default function FooterView({ services, quickLinks, highlights, intro, socialTitle, social, contactTitle, address, phone, email, hours, copyright, domain }: FooterData) {
+export default function FooterView({ services, quickLinks, highlights, intro, socialTitle, social, contactTitle, address, phone, email, licenseNumber, hours, copyright, domain }: FooterData) {
   return (
     <footer className="relative isolate overflow-hidden bg-brand-950 text-brand-100" style={{ viewTransitionName: 'site-footer' }}>
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
@@ -53,7 +54,8 @@ export default function FooterView({ services, quickLinks, highlights, intro, so
           <Link href="/" className="inline-block">
             <Image src="/assets/images/Love-Thy-Neighbor-Home-Health-Care-Inc-1-f16b93ab.png" alt="Love Thy Neighbor home health care home page" width={172} height={56} className="h-14 w-auto" />
           </Link>
-          <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-brand-100/75">{intro}</p>
+          <p className="mt-3 text-[13px] font-semibold tracking-wide text-brand-100/80">License no.: {licenseNumber}</p>
+          <p className="mt-5 max-w-sm text-[15px] leading-relaxed text-brand-100/75">{intro}</p>
           <div className="mt-7">
             <p className="text-[12px] font-bold tracking-[0.2em] text-accent-300 uppercase">{socialTitle}</p>
             <ul className="mt-4 flex gap-3">

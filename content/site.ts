@@ -9,6 +9,7 @@ export const site = {
     "href": "tel:+13527870499"
   },
   "email": "homehealth@lovethyneighborcs.com",
+  "licenseNumber": "299996008",
   "address": "2620 Industrial St ste 110, Leesburg, FL 34748, United States",
   "map": {
     "lat": 28.8254936,
